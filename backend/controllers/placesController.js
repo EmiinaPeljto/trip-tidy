@@ -28,13 +28,17 @@ exports.getPlaces = async (req, res) => {
     for (const category of categoryList) {
       const fqResponse = await axios.get(`${fqBaseUrl}/search`, {
         headers: {
-          Authorization: fqKey, // ✅ No 'Bearer'
+          Authorization: fqKey,
         },
         params: {
           ll: `${lat},${lng}`,
           query: category.trim(),
           sort: "POPULARITY",
           limit,
+        },
+        headers: {
+          Accept: "application/json",
+          Authorization: fqKey,
         },
       });
 
@@ -43,7 +47,7 @@ exports.getPlaces = async (req, res) => {
       }
     }
 
-    // 3. Deduplicate by fsq_id
+    // 3. Process results
     const uniquePlacesMap = new Map();
     allPlaces.forEach((place) => uniquePlacesMap.set(place.fsq_id, place));
     const uniquePlaces = Array.from(uniquePlacesMap.values());
@@ -76,7 +80,9 @@ exports.getPlaces = async (req, res) => {
             lon: place.geocodes.main.longitude,
           },
           image_url: image,
-         details_url: `https://www.tripadvisor.com/Search?q=${encodeURIComponent(place.name + ' ' + destination)}`,
+          details_url: `https://www.tripadvisor.com/Search?q=${encodeURIComponent(
+            place.name + " " + destination
+          )}`,
         };
       })
     );

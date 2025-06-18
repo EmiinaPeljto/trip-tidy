@@ -29,7 +29,6 @@ exports.getSummary = async (req, res) => {
 `;
 
   try {
-    // Pass a valid Together AI model name as the second argument
     const parsedContent = await callTogetherAI(
       prompt,
       "mistralai/Mixtral-8x7B-Instruct-v0.1"

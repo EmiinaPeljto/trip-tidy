@@ -12,7 +12,7 @@ exports.getFlights = async (req, res) => {
       departureDate: start_date,
       returnDate: end_date,
       adults: adults,
-      max: 3, // Limit the number of results
+      max: 3, 
     });
 
     const flights = response.data.map((offer) => {

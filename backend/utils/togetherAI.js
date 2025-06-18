@@ -9,7 +9,8 @@ async function callTogetherAI(prompt, model) {
     const response = await together.chat.completions.create({
       messages: [{ role: "user", content: prompt }],
       model: model,
-      temperature: 0.7,
+      temperature: 0.3,
+      response_format: { type: "json_object" }
     });
 
     if (response && response.choices && response.choices.length > 0) {
@@ -20,10 +21,10 @@ async function callTogetherAI(prompt, model) {
       let openBraces = 0;
       let start = -1;
       for (let i = 0; i < rawContent.length; i++) {
-        if (rawContent[i] === '{') {
+        if (rawContent[i] === "{") {
           if (openBraces === 0) start = i;
           openBraces++;
-        } else if (rawContent[i] === '}') {
+        } else if (rawContent[i] === "}") {
           openBraces--;
           if (openBraces === 0 && start !== -1) {
             jsonString = rawContent.slice(start, i + 1);

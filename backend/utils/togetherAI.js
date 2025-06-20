@@ -9,7 +9,7 @@ async function callTogetherAI(prompt, model) {
     const response = await together.chat.completions.create({
       messages: [{ role: "user", content: prompt }],
       model: model,
-      temperature: 0.3,
+      temperature: 0.7,
       response_format: { type: "json_object" }
     });
 
@@ -56,4 +56,4 @@ async function callTogetherAI(prompt, model) {
   }
 }
 
-module.exports = { callTogetherAI };
+module.exports = { callTogetherAI };   

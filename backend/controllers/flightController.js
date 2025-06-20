@@ -1,45 +1,41 @@
-const amadeus = require("../config/amadeus");
-const axios = require("axios");
+const flightService = require("../services/flightService");
 
-// Function to search for flights
 exports.getFlights = async (req, res) => {
   const { origin, destination, start_date, end_date, adults } = req.query;
 
+  // Validate required parameters
+  if (!origin || !destination || !start_date || !end_date || !adults) {
+    return res.status(400).json({
+      error: "Missing required query parameters: origin, destination, start_date, end_date, adults"
+    });
+  }
+
+  // Validate that dates are in the future
+  const today = new Date().toISOString().split('T')[0];
+  if (start_date < today || end_date < today) {
+    return res.status(400).json({
+      error: "Dates must be in the future"
+    });
+  }
+
   try {
-    const response = await amadeus.shopping.flightOffersSearch.get({
-      originLocationCode: origin,
-      destinationLocationCode: destination,
-      departureDate: start_date,
-      returnDate: end_date,
-      adults: adults,
-      max: 3, 
-    });
-
-    const flights = response.data.map((offer) => {
-      const segments = offer.itineraries.flatMap((i) => i.segments);
-
-      return {
-        price: offer.price.total,
-        currency: offer.price.currency,
-        duration: offer.itineraries.map((i) => i.duration),
-
-        // For each segment, show basic info
-        segments: segments.map((seg) => ({
-          airline: seg.carrierCode,
-          flightNumber: seg.number,
-          from: seg.departure.iataCode,
-          to: seg.arrival.iataCode,
-          departure: seg.departure.at,
-          arrival: seg.arrival.at,
-        })),
-      };
-    });
-
+    const flights = await flightService.getFlights(
+      origin,
+      destination,
+      start_date,
+      end_date,
+      adults
+    );
     res.json({ flights });
   } catch (error) {
     console.error("Error searching for flights:", error);
-    return res.status(500).json({ error: "Internal server error" });
+    // Optionally, show Amadeus error details if available
+    if (error.response?.body) {
+      try {
+        const amadeusError = JSON.parse(error.response.body);
+        return res.status(400).json({ error: amadeusError.errors?.[0]?.detail || "Amadeus API error" });
+      } catch (e) {}
+    }
+    res.status(500).json({ error: "Internal server error" });
   }
 };
-
-

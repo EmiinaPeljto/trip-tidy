@@ -1,8 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const dayByDayController = require("../../../../controllers/dayByDayController"); 
+const itineraryController = require("../../../../controllers/itineraryController");
 
-// Route to get day-by-day itinerary
-router.post("/getDayByDay", dayByDayController.getDayByDay);
+router.post("/createItinerary", itineraryController.createItinerary);
 
 module.exports = router;

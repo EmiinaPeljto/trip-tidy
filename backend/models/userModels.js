@@ -15,8 +15,14 @@ exports.getUserById = async (id) => {
   return rows[0];
 };
 
-
-exports.register = async ({ first_name, last_name, username, email, password_hash, google_id }) => {
+exports.register = async ({
+  first_name,
+  last_name,
+  username,
+  email,
+  password_hash,
+  google_id,
+}) => {
   const [rows] = await db.query(
     "INSERT INTO users (first_name, last_name, username, email, password_hash, google_id) VALUES (?, ?, ?, ?, ?, ?)",
     [first_name, last_name, username, email, password_hash, google_id]
@@ -33,9 +39,14 @@ exports.login = async ({ email, username }) => {
 };
 
 exports.updateUser = async (id, username) => {
-  const [rows] = await db.query(
-    "UPDATE users SET username = ? WHERE id = ?",
-    [username, id]
-  );
+  const [rows] = await db.query("UPDATE users SET username = ? WHERE id = ?", [
+    username,
+    id,
+  ]);
   return rows;
+};
+
+exports.getUserByEmail = async (email) => {
+  const [rows] = await db.query("SELECT * FROM users WHERE email = ?", [email]);
+  return rows[0];
 };

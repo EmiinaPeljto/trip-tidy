@@ -47,6 +47,7 @@ exports.createItinerary = async (req, res) => {
         start_date,
         end_date,
         transportation,
+        adults,
         budget,
         trip_type,
         preference_id,
@@ -99,14 +100,14 @@ exports.createItinerary = async (req, res) => {
         start_date,
         end_date,
         budget,
-        1
+        adults
       );
       const transportation_details = await flightService.getFlights(
         origin,
         destination,
         start_date,
         end_date,
-        1
+        adults
       );
       const places = await placesService.getPlaces(destination, preferencesString);
   
@@ -116,6 +117,7 @@ exports.createItinerary = async (req, res) => {
         start_date,
         end_date,
         transportation,
+        adults,
         budget,
         trip_type,
         summaryData.trip_title,

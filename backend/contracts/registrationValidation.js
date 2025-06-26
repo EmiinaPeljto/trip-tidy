@@ -15,14 +15,13 @@ async function validateUsernameUpdate(
     username.trim() === "" ||
     !/^[a-zA-Z0-9]+$/.test(username)
   ) {
-    errors.username = "Username is required and must be a string without special carracters.";
+    errors.username =
+      "Username is required and must be a string without special characters.";
   } else if (username.length < 3) {
     errors.username = "Username must be at least 3 characters long.";
   } else if (existingUsers.some((user) => user.username === username)) {
     errors.username = "Username is already taken.";
-  } else if (
-    reservedUsernames.some((user) => user.username === username.toLowerCase())
-  ) {
+  } else if (reservedUsernames.includes(username.toLowerCase())) {
     errors.username = "Username is reserved.";
   }
   return {
@@ -57,7 +56,7 @@ async function validateRegistrationData(
   }
 
   // Username validation
-  const usernameValidation = validateUsernameUpdate(
+  const usernameValidation = await validateUsernameUpdate(
     username,
     existingUsers,
     reservedUsernames

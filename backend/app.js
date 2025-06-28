@@ -3,9 +3,15 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 const db = require("./config/db");
+const session = require("express-session");
+const passport = require("./config/passport");
 
 app.use(express.json());
-app.use(cors()); // Enable CORS for all routes
+app.use(cors()); 
+
+app.use(session({ secret: "your_secret", resave: false, saveUninitialized: true }));
+app.use(passport.initialize());
+app.use(passport.session());
 
 const userRoutes = require("./routes/api/v1/gen/users");
 const hotelRoutes = require("./routes/api/v1/gen/hotels");

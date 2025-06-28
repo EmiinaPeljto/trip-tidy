@@ -1,4 +1,7 @@
 const userModel = require("../models/userModels");
+const crypto = require("crypto");
+const { sendPasswordResetEmail } = require("../utils/email");
+
 const {
   validateRegistrationData,
   validateUsernameUpdate,
@@ -149,4 +152,35 @@ exports.updateUser = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: "Error updating user", error });
   }
+};
+
+exports.forgotPassword = async (req, res) => {
+  const { email } = req.body;
+  const user = await userModel.getUserByEmail(email);
+  if (!user) {
+    return res
+      .status(200)
+      .json({ message: "If this email exists, a reset link has been sent." });
+  }
+  const token = crypto.randomBytes(32).toString("hex");
+  const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
+  await userModel.createPasswordResetToken(email, token, expiresAt);
+  await sendPasswordResetEmail(email, user.first_name, token);
+  res
+    .status(200)
+    .json({ message: "If this email exists, a reset link has been sent." });
+};
+
+exports.resetPassword = async (req, res) => {
+  const { token, password } = req.body;
+  const reset = await userModel.getPasswordResetByToken(token);
+  if (!reset) {
+    return res.status(400).json({ message: "Invalid or expired token." });
+  }
+  const hashedPassword = await bcrypt.hash(password, 10);
+  await userModel.updateUserPassword(reset.email, hashedPassword);
+  await userModel.deletePasswordResetToken(token);
+  res
+    .status(200)
+    .json({ message: "Password has been reset. You can now log in." });
 };

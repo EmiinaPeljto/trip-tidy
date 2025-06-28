@@ -32,18 +32,18 @@ const LogInForm = () => {
   };
 
   return (
-    <section className="bg-gray-50 min-h-screen flex items-center justify-center">
-      <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-        <div className="bg-white rounded-lg shadow md:mt-0 w-full sm:w-[500px] xl:p-0 border border-gray-200">
-          <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl text-center">
+    <section className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#e3f0fc] via-[#f7fbff] to-[#e3f0fc]">
+      <div className="grid grid-cols-1 items-center rounded-xl bg-white max-sm:p-6 sm:p-10 shadow-2xl border border-gray-100 w-full sm:w-[500px]">
+        <div className="grid grid-cols-1 gap-10">
+          <div>
+            <h1 className="text-lg font-semibold text-center">
               Log in to your account
             </h1>
-            <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
+            <form className="mt-10 space-y-4" onSubmit={handleSubmit}>
               <div>
                 <label
                   htmlFor="usernameOrEmail"
-                  className="block mb-2 text-sm font-medium text-gray-900"
+                  className="block mb-2 text-sm font-medium"
                 >
                   Username or Email
                 </label>
@@ -55,13 +55,13 @@ const LogInForm = () => {
                   onChange={handleChange}
                   value={formData.usernameOrEmail}
                   required
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#5AB1F5] focus:border-[#5AB1F5] block w-full p-2.5"
+                  className="block h-10 w-full appearance-none rounded-lg bg-white pl-3 pr-3 border border-gray-300 text-sm outline outline-1 outline-gray-950/15 focus:outline-[#5AB1F5] focus:border-[#5AB1F5] transition"
                 />
               </div>
               <div>
                 <label
                   htmlFor="password"
-                  className="block mb-2 text-sm font-medium text-gray-900"
+                  className="block mb-2 text-sm font-medium "
                 >
                   Password
                 </label>
@@ -73,31 +73,41 @@ const LogInForm = () => {
                   onChange={handleChange}
                   value={formData.password}
                   required
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#5AB1F5] focus:border-[#5AB1F5] block w-full p-2.5"
+                  className="block h-10 w-full appearance-none rounded-lg bg-white pl-3 pr-3 border border-gray-300 text-sm outline outline-1 outline-gray-950/15 focus:outline-[#5AB1F5] focus:border-[#5AB1F5] transition"
                 />
+                <div className="flex justify-end mt-1">
+                  <Link
+                    to="/forgot-password"
+                    className="text-[#5AB1F5] hover:underline text-sm"
+                  >
+                    Forgot your password?
+                  </Link>
+                </div>
               </div>
-              {/* Show backend error message */}
               {errors?.general && (
                 <p className="text-red-500 text-sm">{errors.general}</p>
               )}
-              {/* Show backend message property if present */}
               {errors?.message && (
-                <p className=" text-red-500 text-sm">{errors.message}</p>
+                <p className="text-red-500 text-sm">{errors.message}</p>
               )}
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full text-white bg-[#5AB1F5] hover:bg-[#4098db] focus:ring-4 focus:outline-none focus:ring-[#5AB1F5]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition"
+                className="mt-6 w-full inline-flex justify-center rounded-full text-sm font-semibold bg-[#5AB1F5] text-white hover:bg-[#4098db] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#5AB1F5] px-4 py-2 transition"
               >
                 {loading ? "Logging In..." : "Log In"}
               </button>
-              <div className="flex items-center">
+              <div className="flex items-center my-2">
                 <div className="flex-grow h-px bg-gray-200"></div>
                 <span className="mx-2 text-gray-400 text-xs">or</span>
                 <div className="flex-grow h-px bg-gray-200"></div>
               </div>
               <button
                 type="button"
+                onClick={() =>
+                  (window.location.href =
+                    "http://localhost:3001/api/v1/gen/users/google")
+                }
                 className="w-full flex items-center justify-center gap-2 border border-gray-300 rounded-lg px-5 py-2.5 text-sm font-medium text-gray-700 bg-white hover:bg-gray-100 transition mb-2"
               >
                 <img

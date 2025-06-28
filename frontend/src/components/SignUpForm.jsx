@@ -44,20 +44,18 @@ const SignUpForm = () => {
   };
 
   return (
-    <section className="bg-gray-50 min-h-screen flex items-center justify-center">
-      <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-        <div className="bg-white rounded-lg shadow md:mt-0 w-full sm:w-[500px] xl:p-0 border border-gray-200">
-          <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl text-center">
-              Create your account
-            </h1>
-            <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
+    <section className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#e3f0fc] via-[#f7fbff] to-[#e3f0fc]">
+      <div className="grid grid-cols-1 items-center rounded-xl bg-white max-sm:p-6 sm:p-10 shadow-2xl border border-gray-100 w-full sm:w-[500px]">
+        <div className="grid grid-cols-1 gap-10">
+          <div>
+            <h1 className="text-lg font-semibold text-center">Create your account</h1>
+            <form className="mt-10 space-y-4" onSubmit={handleSubmit}>
               {/* First and Last Name */}
-              <div className="flex flex-col sm:flex-row sm:space-x-8">
+              <div className="flex flex-col sm:flex-row sm:space-x-4">
                 <div className="w-full sm:w-1/2">
                   <label
                     htmlFor="first_name"
-                    className="block mb-2 text-sm font-medium text-gray-900"
+                    className="block mb-2 text-sm font-medium "
                   >
                     First Name
                   </label>
@@ -69,7 +67,7 @@ const SignUpForm = () => {
                     onChange={handleChange}
                     value={formData.first_name}
                     required
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#5AB1F5] focus:border-[#5AB1F5] block w-full p-2.5"
+                    className="block h-10 w-full appearance-none rounded-lg bg-white pl-3 pr-3 border border-gray-300 text-sm outline outline-1 outline-gray-950/15 focus:outline-[#5AB1F5] focus:border-[#5AB1F5] transition"
                   />
                   {errors.first_name && (
                     <p className="text-red-500 text-sm">{errors.first_name}</p>
@@ -78,7 +76,7 @@ const SignUpForm = () => {
                 <div className="w-full sm:w-1/2 mt-4 sm:mt-0">
                   <label
                     htmlFor="last_name"
-                    className="block mb-2 text-sm font-medium text-gray-900"
+                    className="block mb-2 text-sm font-medium"
                   >
                     Last Name
                   </label>
@@ -90,7 +88,7 @@ const SignUpForm = () => {
                     onChange={handleChange}
                     value={formData.last_name}
                     required
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#5AB1F5] focus:border-[#5AB1F5] block w-full p-2.5"
+                    className="block h-10 w-full appearance-none rounded-lg bg-white pl-3 pr-3 border border-gray-300 text-sm outline outline-1 outline-gray-950/15 focus:outline-[#5AB1F5] focus:border-[#5AB1F5] transition"
                   />
                   {errors.last_name && (
                     <p className="text-red-500 text-sm">{errors.last_name}</p>
@@ -98,11 +96,11 @@ const SignUpForm = () => {
                 </div>
               </div>
               {/* Username and Email */}
-              <div className="flex flex-col sm:flex-row sm:space-x-8">
+              <div className="flex flex-col sm:flex-row sm:space-x-4">
                 <div className="w-full sm:w-1/2">
                   <label
                     htmlFor="username"
-                    className="block mb-2 text-sm font-medium text-gray-900"
+                    className="block mb-2 text-sm font-medium"
                   >
                     Username
                   </label>
@@ -114,7 +112,7 @@ const SignUpForm = () => {
                     onChange={handleChange}
                     value={formData.username}
                     required
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#5AB1F5] focus:border-[#5AB1F5] block w-full p-2.5"
+                    className="block h-10 w-full appearance-none rounded-lg bg-white pl-3 pr-3 border border-gray-300 text-sm outline outline-1 outline-gray-950/15 focus:outline-[#5AB1F5] focus:border-[#5AB1F5] transition"
                   />
                   {errors.username && (
                     <p className="text-red-500 text-sm">{errors.username}</p>
@@ -123,7 +121,7 @@ const SignUpForm = () => {
                 <div className="w-full sm:w-1/2 mt-4 sm:mt-0">
                   <label
                     htmlFor="email"
-                    className="block mb-2 text-sm font-medium text-gray-900"
+                    className="block mb-2 text-sm font-medium text"
                   >
                     Email
                   </label>
@@ -135,7 +133,7 @@ const SignUpForm = () => {
                     onChange={handleChange}
                     value={formData.email}
                     required
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#5AB1F5] focus:border-[#5AB1F5] block w-full p-2.5"
+                    className="block h-10 w-full appearance-none rounded-lg bg-white pl-3 pr-3 border border-gray-300 text-sm outline outline-1 outline-gray-950/15 focus:outline-[#5AB1F5] focus:border-[#5AB1F5] transition"
                   />
                   {errors.email && (
                     <p className="text-red-500 text-sm">{errors.email}</p>
@@ -143,11 +141,11 @@ const SignUpForm = () => {
                 </div>
               </div>
               {/* Password and Confirm Password */}
-              <div className="flex flex-col sm:flex-row sm:space-x-8">
+              <div className="flex flex-col sm:flex-row sm:space-x-4">
                 <div className="w-full sm:w-1/2">
                   <label
                     htmlFor="password"
-                    className="block mb-2 text-sm font-medium text-gray-900"
+                    className="block mb-2 text-sm font-medium text"
                   >
                     Password
                   </label>
@@ -159,7 +157,7 @@ const SignUpForm = () => {
                     onChange={handleChange}
                     value={formData.password}
                     required
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#5AB1F5] focus:border-[#5AB1F5] block w-full p-2.5"
+                    className="block h-10 w-full appearance-none rounded-lg bg-white pl-3 pr-3 border border-gray-300 text-sm outline outline-1 outline-gray-950/15 focus:outline-[#5AB1F5] focus:border-[#5AB1F5] transition"
                   />
                   {errors.password_hash && (
                     <p className="text-red-500 text-sm">
@@ -170,7 +168,7 @@ const SignUpForm = () => {
                 <div className="w-full sm:w-1/2 mt-4 sm:mt-0">
                   <label
                     htmlFor="confirm_password"
-                    className="block mb-2 text-sm font-medium text-gray-900"
+                    className="block mb-2 text-sm font-medium text"
                   >
                     Confirm Password
                   </label>
@@ -182,7 +180,7 @@ const SignUpForm = () => {
                     onChange={handleChange}
                     value={formData.confirm_password}
                     required
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#5AB1F5] focus:border-[#5AB1F5] block w-full p-2.5"
+                    className="block h-10 w-full appearance-none rounded-lg bg-white pl-3 pr-3 border border-gray-300 text-sm outline outline-1 outline-gray-950/15 focus:outline-[#5AB1F5] focus:border-[#5AB1F5] transition"
                   />
                   {/* You can add client-side error for confirm_password if needed */}
                 </div>
@@ -193,11 +191,11 @@ const SignUpForm = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full text-white bg-[#5AB1F5] hover:bg-[#4098db] focus:ring-4 focus:outline-none focus:ring-[#5AB1F5]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition"
+                className="mt-6 w-full inline-flex justify-center rounded-full text-sm font-semibold bg-[#5AB1F5] text-white hover:bg-[#4098db] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#5AB1F5] px-4 py-2 transition"
               >
                 {loading ? "Signing Up..." : "Sign Up"}
               </button>
-              <div className="flex items-center">
+              <div className="flex items-center my-2">
                 <div className="flex-grow h-px bg-gray-200"></div>
                 <span className="mx-2 text-gray-400 text-xs">or</span>
                 <div className="flex-grow h-px bg-gray-200"></div>
@@ -208,10 +206,11 @@ const SignUpForm = () => {
               >
                 <img
                   src="https://www.svgrepo.com/show/475656/google-color.svg"
+                  onClick={() => window.location.href = "http://localhost:3001/api/v1/gen/users/google"}
                   alt="Google"
                   className="w-5 h-5"
                 />
-                Sign up with Google
+                Sign in with Google
               </button>
             </form>
             <p className="text-sm text-center text-gray-600 mt-4">

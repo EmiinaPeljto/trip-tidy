@@ -1,6 +1,7 @@
 const userModel = require("../models/userModels");
 const crypto = require("crypto");
 const { sendPasswordResetEmail } = require("../utils/email");
+const jwt = require("jsonwebtoken");
 
 const {
   validateRegistrationData,
@@ -105,7 +106,17 @@ exports.login = async (req, res) => {
         .json({ message: "Invalid credentials. Please try again." });
     }
 
-    res.status(200).json({ message: "Login successful", user });
+    const token = jwt.sign(
+      {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+      },
+      process.env.JWT_SECRET || "default_secret",
+      { expiresIn: "168h" }
+    );
+
+    res.status(200).json({ message: "Login successful", token, user });
   } catch (error) {
     res.status(500).json({ message: "Error logging in", error });
   }

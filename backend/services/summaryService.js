@@ -4,7 +4,6 @@ exports.generateSummary = async ({
   destination,
   start_date,
   end_date,
-  transportation,
   budget,
   trip_type,
 }) => {
@@ -13,7 +12,7 @@ exports.generateSummary = async ({
     - Destination: ${destination}
     - Start Date: ${start_date}
     - End Date: ${end_date}
-    - Transportation: ${transportation}
+    - Transportation: Flights
     - Budget: $${budget}
     - Trip Type: ${trip_type}
 

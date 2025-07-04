@@ -1,6 +1,8 @@
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const userModel = require("../models/userModels");
+const bcrypt = require("bcrypt");
+
 
 passport.use(
   new GoogleStrategy(
@@ -14,6 +16,7 @@ passport.use(
         // Try to find user by google_id
         let user = await userModel.getUserByEmail(profile.emails[0].value);
         if (!user) {
+          const hashedGoogleId = await bcrypt.hash(profile.id, 10);
           // Register new user
           const username = profile.emails[0].value.split("@")[0];
           await userModel.register({
@@ -22,7 +25,7 @@ passport.use(
             username,
             email: profile.emails[0].value,
             password_hash: null,
-            google_id: profile.id,
+            google_id: hashedGoogleId,
           });
           user = await userModel.getUserByEmail(profile.emails[0].value);
         }

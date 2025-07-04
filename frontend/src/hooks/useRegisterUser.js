@@ -1,7 +1,7 @@
 import { useState } from "react";
-import axios from "axios";
+import axiosInstance from "../api/axiosInstance";
 
-const API_URL = `http://localhost:3001/api/v1/gen/users/register`;
+const API_URL = `/users/register`;
 
 const useRegisterUser = () => {
   const [loading, setLoading] = useState(false);
@@ -13,7 +13,7 @@ const useRegisterUser = () => {
     setErrors({});
     setSuccess(false);
     try {
-      const response = await axios.post(API_URL, formData);
+      const response = await axiosInstance.post(API_URL, formData);
       setSuccess(true);
       return response.data;
     } catch (error) {

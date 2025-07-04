@@ -1,8 +1,8 @@
 import { useState } from "react";
-import axios from "axios";
+import axiosInstance from "../api/axiosInstance";
 
 const API_URL =
-  "http://localhost:3001/api/v1/gen/email_verification/resend-verification-code";
+  "/email_verification/resend-verification-code";
 
 const useResendVerificationCode = () => {
   const [loading, setLoading] = useState(false);
@@ -14,7 +14,7 @@ const useResendVerificationCode = () => {
     setError("");
     setSuccess(false);
     try {
-      const response = await axios.post(API_URL, { email });
+      const response = await axiosInstance.post(API_URL, { email });
       setSuccess(true);
       return response.data;
     } catch (err) {

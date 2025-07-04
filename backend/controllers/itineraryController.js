@@ -46,7 +46,6 @@ exports.createItinerary = async (req, res) => {
         destination,
         start_date,
         end_date,
-        transportation,
         adults,
         budget,
         trip_type,
@@ -58,7 +57,7 @@ exports.createItinerary = async (req, res) => {
         !destination ||
         !start_date ||
         !end_date ||
-        !transportation ||
+        !adults ||
         !budget ||
         !trip_type ||
         !preference_id
@@ -85,7 +84,6 @@ exports.createItinerary = async (req, res) => {
         destination,
         start_date,
         end_date,
-        transportation,
         budget,
         trip_type,
       });
@@ -116,7 +114,6 @@ exports.createItinerary = async (req, res) => {
         destination,
         start_date,
         end_date,
-        transportation,
         adults,
         budget,
         trip_type,

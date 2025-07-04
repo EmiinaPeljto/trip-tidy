@@ -1,7 +1,7 @@
 import { useState } from "react";
-import axios from "axios";
+import axiosInstance from "../api/axiosInstance";
 
-const API_URL = "http://localhost:3001/api/v1/gen/users/forgot-password";
+const API_URL = "/users/forgot-password";
 
 const useForgotPassword = () => {
   const [loading, setLoading] = useState(false);
@@ -13,7 +13,7 @@ const useForgotPassword = () => {
     setError("");
     setSuccess(false);
     try {
-      const res = await axios.post(API_URL, { email });
+      const res = await axiosInstance.post(API_URL, { email });
       setSuccess(true);
       return res.data;
     } catch (err) {

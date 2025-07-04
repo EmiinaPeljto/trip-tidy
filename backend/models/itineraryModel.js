@@ -23,7 +23,7 @@ exports.createItinerary = async (
   destination,
   start_date,
   end_date,
-  transportation,
+  adults,
   budget,
   trip_type,
   trip_title,
@@ -36,12 +36,12 @@ exports.createItinerary = async (
   origin
 ) => {
   const [rows] = await db.query(
-    "INSERT INTO itineraries (destination, start_date, end_date, transportation, budget, trip_type, trip_title, description, packing_notes, total_days, accommodation, transportation_details, places, origin) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+    "INSERT INTO itineraries (destination, start_date, end_date,adults, budget, trip_type, trip_title, description, packing_notes, total_days, accommodation, transportation_details, places, origin) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
     [
       destination,
       start_date,
       end_date,
-      transportation,
+      adults,
       budget,
       trip_type,
       trip_title,

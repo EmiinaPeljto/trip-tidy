@@ -1,8 +1,8 @@
 import { useState } from "react";
-import axios from "axios";
+import axiosInstance from "../api/axiosInstance";
 
 const API_URL =
-  "http://localhost:3001/api/v1/gen/email_verification/verify-email";
+  "/email_verification/verify-email";
 
 const useVerifyEmailCode = () => {
   const [loading, setLoading] = useState(false);

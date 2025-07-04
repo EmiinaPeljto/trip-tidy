@@ -48,7 +48,9 @@ const SignUpForm = () => {
       <div className="grid grid-cols-1 items-center rounded-xl bg-white max-sm:p-6 sm:p-10 shadow-2xl border border-gray-100 w-full sm:w-[500px]">
         <div className="grid grid-cols-1 gap-10">
           <div>
-            <h1 className="text-lg font-semibold text-center">Create your account</h1>
+            <h1 className="text-lg font-semibold text-center">
+              Create your account
+            </h1>
             <form className="mt-10 space-y-4" onSubmit={handleSubmit}>
               {/* First and Last Name */}
               <div className="flex flex-col sm:flex-row sm:space-x-4">
@@ -202,11 +204,14 @@ const SignUpForm = () => {
               </div>
               <button
                 type="button"
+                onClick={() =>
+                  (window.location.href =
+                    "http://localhost:3001/api/v1/gen/users/google")
+                }
                 className="w-full flex items-center justify-center gap-2 border border-gray-300 rounded-lg px-5 py-2.5 text-sm font-medium text-gray-700 bg-white hover:bg-gray-100 transition mb-2"
               >
                 <img
                   src="https://www.svgrepo.com/show/475656/google-color.svg"
-                  onClick={() => window.location.href = "http://localhost:3001/api/v1/gen/users/google"}
                   alt="Google"
                   className="w-5 h-5"
                 />

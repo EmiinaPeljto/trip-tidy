@@ -5,10 +5,12 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import EmailVerification from "./pages/EmailVerification";
 import Home from "./pages/Home";
+import CreateItinerary from "./pages/CreateItinerary";
 import useGoogleToken from "./hooks/useGoogleToken";
 import "./App.css";
 import { Toaster } from "react-hot-toast";
 import NavBar from "./components/NavBar";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   useGoogleToken();
@@ -29,6 +31,12 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
           <Route path="/" element={<Home />} />
+
+          {/* Protected Route */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="/create-itinerary" element={<CreateItinerary />} />
+            {/* Add any other routes you want to protect here */}
+          </Route>
         </Routes>
       </div>
     </>

@@ -167,4 +167,13 @@ exports.createItinerary = async (req, res) => {
       if (connection) connection.release();
     }
   };
-    
+
+  exports.getPreferences = async (req, res) => {
+    try {
+      const preferences = await itineraryModel.getPreferences();
+      res.json(preferences);
+    } catch (error) {
+      console.error("Error fetching preferences:", error);
+      res.status(500).json({ error: "Failed to fetch preferences" });
+    }
+  };

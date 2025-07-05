@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import ItineraryFirstStepForm from '../components/ItineraryFirstStepForm';
 import ItinerarySecondStepForm from '../components/ItinerarySecondStepForm';
@@ -8,7 +9,7 @@ import useCreateItinerary from '../hooks/useCreateItinerary';
 const CreateItinerary = () => {
   const [step, setStep] = useState(() => {
     const savedStep = localStorage.getItem('itineraryStep');
-    return savedStep ? JSON.parse(savedStep) : 1;
+    return savedStep ? JSON.parse(savedStep) : { travelers: 1, tripType: '' };
   });
 
   const [formData, setFormData] = useState(() => {
@@ -26,6 +27,7 @@ const CreateItinerary = () => {
   });
 
   const { createItinerary, data: itineraryData, loading, error, reset } = useCreateItinerary();
+  const navigate = useNavigate();
 
   useEffect(() => {
     localStorage.setItem('itineraryStep', JSON.stringify(step));
@@ -34,6 +36,13 @@ const CreateItinerary = () => {
   useEffect(() => {
     localStorage.setItem('itineraryFormData', JSON.stringify(formData));
   }, [formData]);
+
+  useEffect(() => {
+    if (itineraryData) {
+      // Itinerary created successfully, navigate to the itinerary page
+      navigate('/itinerary', { state: { itinerary: itineraryData } });
+    }
+  }, [itineraryData, navigate]);
 
   const handleNext = (newData) => {
     setFormData((prev) => ({ ...prev, ...newData }));
@@ -62,7 +71,7 @@ const CreateItinerary = () => {
       end_date: format(finalData.dateRange.endDate, 'yyyy-MM-dd'),
       adults: finalData.adults,
       trip_type: finalData.tripType,
-      preference_id: finalData.preferences, // Assuming this is an array of IDs
+      preference_id: finalData.preferences, 
     };
 
     createItinerary(payload);

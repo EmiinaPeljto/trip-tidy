@@ -60,7 +60,7 @@ const ItineraryFirstStepForm = ({ onNext, initialData = {} }) => {
   }, [datePickerRef]);
 
   return (
-    <section className="flex flex-col items-center justify-center h-200 bg-white p-8">
+    <section className="flex flex-col items-center justify-center h-screen bg-white p-8">
       <div className="text-center w-full max-w-4xl">
         {/* Heading */}
         <h1 className="text-3xl sm:text-4xl font-semibold text-gray-800">

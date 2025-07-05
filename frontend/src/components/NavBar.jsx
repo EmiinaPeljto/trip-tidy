@@ -84,7 +84,7 @@ const NavBar = () => {
                   <FiMenu className="text-[1rem] text-gray-700 md:hidden" />
                 </button>
                 {dropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg border border-gray-200 py-2  animate-fade-in">
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg border border-gray-200 py-2  animate-fade-in0">
                     <div className="block md:hidden">
                       <Link
                         to="/"

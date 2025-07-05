@@ -33,7 +33,7 @@ const ItinerarySecondStepForm = ({ onNext, onBack, initialData = {} }) => {
   const showAdultsInput = tripType === 'family' || tripType === 'friends';
 
   return (
-    <section className="flex flex-col items-center justify-center h-200 bg-white p-8">
+    <section className="flex flex-col items-center justify-center h-screen bg-white p-8">
       <div className="text-center w-full max-w-4xl">
         <h1 className="text-3xl sm:text-4xl font-semibold text-gray-800">
           Create unforgettable memories—solo or with others.

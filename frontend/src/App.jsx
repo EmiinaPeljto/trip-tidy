@@ -32,7 +32,7 @@ function App() {
           <Route path="/reset-password/:token" element={<ResetPassword />} />
           <Route path="/" element={<Home />} />
           <Route path="/create-itinerary" element={<CreateItinerary />} />
-            <Route path="/itinerary" element={<ItineraryPage />} />
+          <Route path="/itinerary" element={<ItineraryPage />} />
             
         </Routes>
       </div>

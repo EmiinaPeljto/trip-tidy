@@ -1,27 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useLocation, Link } from 'react-router-dom';
+import { format, differenceInDays } from 'date-fns';
+import { FaCalendarAlt, FaBars, FaArrowLeft } from 'react-icons/fa';
 import SideNavbar from '../components/SideNavbar';
 import Map from '../components/Map';
+import HotelRecommendations from '../components/HotelRecommendations';
+import TravelChecklist from '../components/TravelChecklist';
+import FlightRecommendations from '../components/FlightRecommendations';
+import DailyItinerary from '../components/DailyItinerary';
+import PlaceRecommendations from '../components/PlaceRecommendations';
 
 const ItineraryPage = () => {
+  const [isSidebarOpen, setSidebarOpen] = useState(true);
   const location = useLocation();
   const { itinerary } = location.state || {};
 
-  // Dummy data for presentation with coordinates
-  const dummyHotels = [
-    { title: 'Grand Plaza Hotel', description: 'Luxury hotel with stunning city views.', location: '123 Main Street', rating: 4.8, imageUrl: '...', latitude: 40.7128, longitude: -74.0060 },
-    { title: 'The Cozy Inn', description: 'A charming and affordable inn near downtown.', location: '456 Oak Avenue', rating: 4.5, imageUrl: '...', latitude: 40.7228, longitude: -74.0160 },
-    { title: 'Seaside Resort', description: 'Relax by the beach in this beautiful resort.', location: '789 Beach Blvd', rating: 4.7, imageUrl: '...', latitude: 40.7028, longitude: -73.9960 },
-  ];
 
-  const dummyPlaces = [
-    { title: 'Historic Museum', description: 'Explore the rich history of the region.', location: '101 Museum Drive', rating: 4.6, imageUrl: '...', latitude: 40.7328, longitude: -74.0010 },
-    { title: 'Central Park', description: 'A perfect spot for a relaxing afternoon stroll.', location: '202 Park Lane', rating: 4.9, imageUrl: '...', latitude: 40.7829, longitude: -73.9654 },
-    { title: 'The Food Market', description: 'Taste local delicacies and fresh produce.', location: '303 Market Street', rating: 4.8, imageUrl: '...', latitude: 40.7158, longitude: -73.9990 },
-  ];
+  const dummyFlights = itinerary.flights || [];
 
   const hotels = itinerary?.hotel_recommendations || dummyHotels;
   const places = itinerary?.place_recommendations || dummyPlaces;
+  const flights = itinerary?.flights || dummyFlights;
 
   const mapMarkers = [...hotels, ...places].map(item => ({
     latitude: item.latitude,
@@ -33,6 +32,10 @@ const ItineraryPage = () => {
     latitude: hotels[0]?.latitude || 40.7128,
     longitude: hotels[0]?.longitude || -74.0060,
   };
+
+  const startDate = itinerary?.start_date ? new Date(itinerary.start_date) : new Date();
+  const endDate = itinerary?.end_date ? new Date(itinerary.end_date) : new Date();
+  const numDays = differenceInDays(endDate, startDate) + 1;
 
   if (!itinerary) {
     return (
@@ -47,67 +50,87 @@ const ItineraryPage = () => {
   }
 
   return (
-    <div className="flex flex-col md:flex-row h-screen bg-gray-50 overflow-hidden">
-      {/* Side Navbar */}
-      <div className="w-full md:w-1/4 md:h-full md:shadow-lg overflow-y-auto">
-        <SideNavbar itinerary={itinerary} />
+    <div className="flex h-screen bg-gray-100">
+      {/* Integrated Sidebar and Toggle Button */}
+      <div
+        className={`relative bg-white shadow-lg transition-all duration-300 ease-in-out h-full flex flex-col p-4
+          ${isSidebarOpen ? 'w-full md:w-1/4' : 'w-20 items-center'}`}
+      >
+        <button
+          onClick={() => setSidebarOpen(!isSidebarOpen)}
+          className="bg-gray-100 p-3 rounded-full text-gray-600 hover:bg-gray-200 focus:outline-none mb-4"
+          aria-label="Toggle sidebar"
+        >
+          {isSidebarOpen ? <FaArrowLeft /> : <FaBars />}
+        </button>
+
+        <div className={isSidebarOpen ? 'block' : 'hidden'}>
+          <SideNavbar itinerary={itinerary} />
+        </div>
       </div>
 
-      {/* Main Content */}
-      <div className="w-full md:w-1/2 p-4 md:p-8 overflow-y-auto">
-        <h1 className="text-3xl md:text-4xl font-bold mb-8 text-gray-800">Your Itinerary for {itinerary.destination}</h1>
-        
-        <section id="travel-checklist" className="mb-12">
-          <h2 className="text-2xl font-semibold mb-4 text-gray-700">Travel Checklist</h2>
-          <div className="bg-white p-6 rounded-lg shadow-sm">
-            <p>{itinerary.travel_checklist || 'Checklist items go here...'}</p>
-          </div>
-        </section>
-
-        <section id="hotel-recommendations" className="mb-12">
-          <h2 className="text-2xl font-semibold mb-4 text-gray-700">Hotel Recommendations</h2>
-          <div className="bg-white p-6 rounded-lg shadow-sm">
-            <p>{itinerary.hotel_recommendations || 'Hotel cards go here...'}</p>
-          </div>
-        </section>
-
-        <section id="flights" className="mb-12">
-          <h2 className="text-2xl font-semibold mb-4 text-gray-700">Flights</h2>
-           <div className="bg-white p-6 rounded-lg shadow-sm">
-            <p>{itinerary.flights || 'Flight details go here...'}</p>
-          </div>
-        </section>
-
-        <section id="place-recommendations" className="mb-12">
-          <h2 className="text-2xl font-semibold mb-4 text-gray-700">Place Recommendations</h2>
-           <div className="bg-white p-6 rounded-lg shadow-sm">
-            <p>{itinerary.place_recommendations || 'Place cards go here...'}</p>
-          </div>
-        </section>
-
-        <section id="itinerary-details" className="mb-12">
-          <h2 className="text-2xl font-semibold mb-4 text-gray-700">Daily Itinerary</h2>
-          {itinerary.itinerary_days && itinerary.itinerary_days.map((day, i) => (
-            <div key={i} id={`day-${i + 1}`} className="mb-8">
-              <h3 className="text-xl font-semibold mb-4 text-gray-700">Day {i + 1}</h3>
-              <div className="bg-white p-6 rounded-lg shadow-sm">
-                <p>{day.activities || `Details for Day ${i + 1} go here...`}</p>
+      {/* Main Content & Map Wrapper */}
+      <div className="flex-1 flex overflow-hidden">
+        <main className="flex-1 p-4 md:p-8 overflow-y-auto">
+          <section className="bg-white p-8 rounded-lg shadow-md text-center mb-12">
+            <h1 className="text-4xl md:text-5xl font-extrabold text-gray-800 mb-4">
+              {itinerary.trip_title || `Your Amazing Trip to ${itinerary.destination}`}
+            </h1>
+            <p className="text-lg md:text-xl text-gray-600 mb-8">
+              {itinerary.trip_description || 'An unforgettable journey filled with adventure, culture, and relaxation. Get ready to explore the best of what this destination has to offer!'}
+            </p>
+            <div className="flex justify-between items-center text-gray-500 border-t pt-4">
+              <div className="flex items-center">
+                <FaCalendarAlt className="mr-2" />
+                <span>{`${format(startDate, 'MMM d, yyyy')} - ${format(endDate, 'MMM d, yyyy')}`}</span>
+              </div>
+              <div>
+                <span>{numDays} {numDays > 1 ? 'Days' : 'Day'}</span>
               </div>
             </div>
-          ))}
-        </section>
+          </section>
 
-        <section id="budget" className="mb-12">
-          <h2 className="text-2xl font-semibold mb-4 text-gray-700">Budget</h2>
-           <div className="bg-white p-6 rounded-lg shadow-sm">
-            <p>{itinerary.budget_summary || 'Budget details go here...'}</p>
+          <section id="travel-checklist" className="mb-12">
+            <h2 className="text-2xl font-semibold mb-4 text-gray-700">Travel Checklist</h2>
+            <TravelChecklist checklist={itinerary.checklist} />
+          </section>
+
+          <section id="hotel-recommendations" className="mb-12">
+            <h2 className="text-2xl font-semibold mb-4 text-gray-700">Hotel Recommendations</h2>
+            <HotelRecommendations hotels={hotels} />
+          </section>
+
+          <section id="flights" className="mb-12">
+            <h2 className="text-2xl font-semibold mb-4 text-gray-700">Flights</h2>
+            <FlightRecommendations flights={flights} />
+          </section>
+
+          <section id="place-recommendations" className="mb-12">
+            <h2 className="text-2xl font-semibold mb-4 text-gray-700">Place Recommendations</h2>
+            <PlaceRecommendations places={places} />
+          </section>
+
+          <section id="itinerary-details" className="mb-12">
+            <h2 className="text-2xl font-semibold mb-4 text-gray-700">Daily Itinerary</h2>
+            <DailyItinerary itineraryDays={itinerary.itinerary.itineraryDays} />
+          </section>
+
+          <section id="budget" className="mb-12">
+            <h2 className="text-2xl font-semibold mb-4 text-gray-700">Budget</h2>
+            <div className="bg-white p-6 rounded-lg shadow-sm">
+              <p>Budget details will be displayed here.</p>
+            </div>
+          </section>
+        </main>
+
+        {/* Map View */}
+        <aside className="hidden md:block w-1/3 p-4 bg-gray-100">
+          <div className="sticky top-0 h-full flex flex-col">
+            <div className="flex-grow rounded-lg overflow-hidden shadow-md">
+              <Map center={mapCenter} markers={mapMarkers} />
+            </div>
           </div>
-        </section>
-      </div>
-
-      {/* Map */}
-      <div className="hidden md:block md:w-1/4 h-full">
-        <Map center={mapCenter} markers={mapMarkers} />
+        </aside>
       </div>
     </div>
   );

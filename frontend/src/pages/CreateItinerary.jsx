@@ -7,35 +7,11 @@ import ItineraryThirdStepForm from '../components/ItineraryThirdStepForm';
 import useCreateItinerary from '../hooks/useCreateItinerary';
 
 const CreateItinerary = () => {
-  const [step, setStep] = useState(() => {
-    const savedStep = localStorage.getItem('itineraryStep');
-    return savedStep ? JSON.parse(savedStep) : { travelers: 1, tripType: '' };
-  });
-
-  const [formData, setFormData] = useState(() => {
-    const savedData = localStorage.getItem('itineraryFormData');
-    if (savedData) {
-      const data = JSON.parse(savedData);
-      // Re-hydrate date objects from strings
-      if (data.dateRange) {
-        data.dateRange.startDate = new Date(data.dateRange.startDate);
-        data.dateRange.endDate = new Date(data.dateRange.endDate);
-      }
-      return data;
-    }
-    return {};
-  });
+  const [step, setStep] = useState(1);
+  const [formData, setFormData] = useState({});
 
   const { createItinerary, data: itineraryData, loading, error, reset } = useCreateItinerary();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    localStorage.setItem('itineraryStep', JSON.stringify(step));
-  }, [step]);
-
-  useEffect(() => {
-    localStorage.setItem('itineraryFormData', JSON.stringify(formData));
-  }, [formData]);
 
   useEffect(() => {
     if (itineraryData) {
@@ -81,8 +57,6 @@ const CreateItinerary = () => {
     setStep(1);
     setFormData({});
     reset();
-    localStorage.removeItem('itineraryStep');
-    localStorage.removeItem('itineraryFormData');
   };
 
   // Render the generated itinerary or an error message

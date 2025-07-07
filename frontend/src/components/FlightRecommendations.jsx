@@ -5,16 +5,18 @@ const FlightRecommendations = ({ flights }) => {
   // If there are no flights, display a fallback message.
   if (!flights || flights.length === 0) {
     return (
-      <div className="p-4 bg-white rounded-lg shadow-md text-center text-gray-500">
+      <div className="bg-white p-6 rounded-lg shadow-sm text-center text-gray-500">
         No flight recommendations available.
       </div>
     );
   }
 
   return (
-    <div className="flex overflow-x-auto gap-6 pb-4 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+    <div className="flex overflow-x-auto space-x-6 pb-4 -mx-4 px-4">
       {flights.map((flight, index) => (
-        <FlightCard key={index} flight={flight} />
+        <div key={index} className="flex-shrink-0">
+          <FlightCard flight={flight} />
+        </div>
       ))}
     </div>
   );

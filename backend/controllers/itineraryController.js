@@ -31,10 +31,40 @@ exports.getItineraryById = async (req, res) => {
   try {
     const { id } = req.params;
     const itinerary = await itineraryModel.getItineraryById(id);
-    res.json(itinerary);
+    if (!itinerary) {
+      return res.status(404).json({ message: 'Itinerary not found' });
+    }
+
+    const itineraryObject = itinerary.toObject ? itinerary.toObject() : { ...itinerary };
+
+    let places = [];
+    if (itineraryObject.place_recommendations) {
+      if (typeof itineraryObject.place_recommendations === 'string') {
+        try {
+          places = JSON.parse(itineraryObject.place_recommendations);
+        } catch (e) {
+          console.error('Error parsing place_recommendations:', e);
+          places = [];
+        }
+      } else {
+        places = itineraryObject.place_recommendations;
+      }
+    }
+
+    const formattedPlaces = (places || []).map(place => ({
+      title: place.name || 'No Title Provided',
+      imageUrl: place.image_url || null,
+      location: place.location || 'No Location Provided',
+      details_url: place.details_url || '#',
+      coordinates: place.coordinates || null,
+    }));
+
+    itineraryObject.place_recommendations = formattedPlaces;
+
+    res.status(200).json(itineraryObject);
   } catch (error) {
-    console.error("Error fetching itinerary:", error);
-    res.status(500).json({ error: "Failed to fetch itinerary" });
+    console.error('Error fetching itinerary by ID:', error);
+    res.status(500).json({ error: 'Failed to fetch itinerary' });
   }
 };
 
@@ -109,7 +139,6 @@ exports.createItinerary = async (req, res) => {
       );
       const places = await placesService.getPlaces(destination, preferencesString);
   
-      // Run all INSERTS within the transaction
       const itinerary = await itineraryModel.createItinerary(
         destination,
         start_date,
@@ -150,10 +179,8 @@ exports.createItinerary = async (req, res) => {
         connection
       );
   
-      // Commit the transaction
       await connection.commit();
 
-      // --- Final, Corrected Data Transformation ---
       const formattedHotels = (accommodation || []).map(hotel => ({
         title: hotel.name || 'No Title Provided',
         imageUrl: hotel.image || null,
@@ -165,15 +192,12 @@ exports.createItinerary = async (req, res) => {
 
       const formattedPlaces = (places || []).map(place => ({
         title: place.name || 'No Title Provided',
-        imageUrl: place.image || place.photo?.images?.large?.url || null,
-        location: place.address || place.location_string || 'No Location Provided',
-        details_url: place.bookingLink || place.web_url || '#',
+        imageUrl: place.image_url || null,
+        location: place.location || 'No Location Provided',
+        details_url: place.details_url || '#',
         coordinates: place.coordinates || null,
       }));
-
-      // --- DEBUGGING: Log the raw transportation data ---
-      console.log('--- Raw Transportation Details ---');
-      console.log(JSON.stringify(transportation_details, null, 2));
+      console.log('formattedPlaces:', formattedPlaces);
 
       const formattedFlights = (transportation_details || []).map(flight => {
         const midPoint = Math.floor(flight.segments.length / 2);
@@ -216,9 +240,6 @@ exports.createItinerary = async (req, res) => {
         };
       });
 
-      // --- DEBUGGING: Log the formatted flight data ---
-      console.log('--- Formatted Flights ---');
-      console.log(JSON.stringify(formattedFlights, null, 2));
 
       const itineraryData = {
         id: itinerary_id,

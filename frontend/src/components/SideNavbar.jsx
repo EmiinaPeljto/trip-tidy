@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
-import { FaClipboardList, FaCalendarAlt, FaMoneyBillWave, FaChevronDown, FaChevronUp, FaBars, FaTimes } from 'react-icons/fa';
+import {
+  FaClipboardList,
+  FaCalendarAlt,
+  FaMoneyBillWave,
+  FaChevronDown,
+  FaChevronUp,
+  FaBars,
+  FaTimes,
+} from 'react-icons/fa';
 
 const SideNavbar = ({ itinerary }) => {
   const [isSummaryOpen, setSummaryOpen] = useState(true);
@@ -15,17 +23,28 @@ const SideNavbar = ({ itinerary }) => {
     if (targetElement) {
       targetElement.scrollIntoView({ behavior: 'smooth' });
     }
-    if (isMobileMenuOpen) {
-      setMobileMenuOpen(false);
-    }
+    setMobileMenuOpen(false);
   };
 
-  const toggleSummary = () => setSummaryOpen(!isSummaryOpen);
-  const toggleItinerary = () => setItineraryOpen(!isItineraryOpen);
+  const NavSection = ({ icon: Icon, title, isOpen, toggle, children }) => (
+    <li className="mb-6">
+      <button
+        onClick={toggle}
+        className="w-full flex justify-between items-center font-semibold text-gray-700 hover:text-blue-500 transition text-md"
+      >
+        <div className="flex items-center space-x-3">
+          <Icon className="text-lg" />
+          <span>{title}</span>
+        </div>
+        {isOpen ? <FaChevronUp /> : <FaChevronDown />}
+      </button>
+      {isOpen && <ul className="mt-3 pl-7 space-y-2 text-gray-600 text-sm">{children}</ul>}
+    </li>
+  );
 
   return (
     <>
-      {/* Mobile Menu Button */}
+      {/* Mobile Toggle Button */}
       <button
         className="md:hidden fixed top-5 right-5 z-50 p-2 bg-white rounded-full shadow-lg text-gray-800"
         onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}
@@ -35,73 +54,56 @@ const SideNavbar = ({ itinerary }) => {
       </button>
 
       {/* Sidebar */}
-      <div
-        className={`fixed inset-y-0 left-0 transform ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:translate-x-0 transition-transform duration-300 ease-in-out bg-white w-full sm:w-64 md:w-full h-full p-6 flex flex-col shadow-lg md:shadow-none `}
+      <aside
+        className={`fixed inset-y-0 left-0 transform ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
+        md:relative md:translate-x-0 transition-transform duration-300 ease-in-out w-64 bg-white h-full p-6 border-r border-gray-200 shadow-md md:shadow-none`}
       >
-        <nav className="h-full">
-          <ul className="flex flex-col h-full">
-            {/* Summary Section */}
-            <li className="mb-4">
-              <button
-                onClick={toggleSummary}
-                className="w-full flex justify-between items-center font-semibold text-lg text-gray-800 mb-2 focus:outline-none hover:text-[#5AB1F5] transition-colors"
-              >
-                <div className="flex items-center">
-                  <FaClipboardList className="mr-3 text-xl" />
-                  <span>Summary</span>
-                </div>
-                {isSummaryOpen ? <FaChevronUp /> : <FaChevronDown />}
-              </button>
-              {isSummaryOpen && (
-                <ul className="pl-8 border-l-2 border-gray-200 space-y-2 mt-2 transition-all duration-300">
-                  <li><a href="#travel-checklist" onClick={(e) => handleScroll(e, 'travel-checklist')} className="block py-1 text-gray-600 hover:text-[#5AB1F5] transition">Travel Checklist</a></li>
-                  <li><a href="#hotel-recommendations" onClick={(e) => handleScroll(e, 'hotel-recommendations')} className="block py-1 text-gray-600 hover:text-[#5AB1F5] transition">Hotel Recommendations</a></li>
-                  <li><a href="#flights" onClick={(e) => handleScroll(e, 'flights')} className="block py-1 text-gray-600 hover:text-[#5AB1F5] transition">Flights</a></li>
-                  <li><a href="#place-recommendations" onClick={(e) => handleScroll(e, 'place-recommendations')} className="block py-1 text-gray-600 hover:text-[#5AB1F5] transition">Place Recommendations</a></li>
-                </ul>
-              )}
-            </li>
+        <nav className="flex flex-col h-full justify-between">
+          <ul className="space-y-4 overflow-y-auto flex-grow">
+            <NavSection
+              icon={FaClipboardList}
+              title="Summary"
+              isOpen={isSummaryOpen}
+              toggle={() => setSummaryOpen(!isSummaryOpen)}
+            >
+              <li><a href="#travel-checklist" onClick={(e) => handleScroll(e, 'travel-checklist')} className="hover:text-blue-500">Travel Checklist</a></li>
+              <li><a href="#hotel-recommendations" onClick={(e) => handleScroll(e, 'hotel-recommendations')} className="hover:text-blue-500">Hotel Recommendations</a></li>
+              <li><a href="#flights" onClick={(e) => handleScroll(e, 'flights')} className="hover:text-blue-500">Flights</a></li>
+              <li><a href="#place-recommendations" onClick={(e) => handleScroll(e, 'place-recommendations')} className="hover:text-blue-500">Place Recommendations</a></li>
+            </NavSection>
 
-            {/* Itinerary Section */}
-            <li className="mb-4">
-              <button
-                onClick={toggleItinerary}
-                className="w-full flex justify-between items-center font-semibold text-lg text-gray-800 mb-2 focus:outline-none hover:text-[#5AB1F5] transition-colors"
-              >
-                <div className="flex items-center">
-                  <FaCalendarAlt className="mr-3 text-xl" />
-                  <span>Itinerary</span>
-                </div>
-                {isItineraryOpen ? <FaChevronUp /> : <FaChevronDown />}
-              </button>
-              {isItineraryOpen && (
-                <ul className="pl-8 border-l-2 border-gray-200 space-y-2 mt-2 transition-all duration-300 max-h-60 overflow-y-auto">
-                  {dayLinks.map(day => (
-                    <li key={day}>
-                      <a href={`#${day.toLowerCase().replace(' ', '-')}`} onClick={(e) => handleScroll(e, `${day.toLowerCase().replace(' ', '-')}`)} className="block py-1 text-gray-600 hover:text-[#5AB1F5] transition">{day}</a>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </li>
+            <NavSection
+              icon={FaCalendarAlt}
+              title="Itinerary"
+              isOpen={isItineraryOpen}
+              toggle={() => setItineraryOpen(!isItineraryOpen)}
+            >
+              {dayLinks.map((day, i) => (
+                <li key={i}>
+                  <a
+                    href={`#${day.toLowerCase().replace(' ', '-')}`}
+                    onClick={(e) => handleScroll(e, `${day.toLowerCase().replace(' ', '-')}`)}
+                    className="hover:text-blue-500"
+                  >
+                    {day}
+                  </a>
+                </li>
+              ))}
+            </NavSection>
 
-            {/* Budget Section */}
-            <li className="mb-4">
-              <a 
-                href="#budget" 
-                onClick={(e) => handleScroll(e, 'budget')} 
-                className="w-full flex items-center font-semibold text-lg text-gray-800 focus:outline-none hover:text-[#5AB1F5] transition-colors"
+            <li>
+              <a
+                href="#budget"
+                onClick={(e) => handleScroll(e, 'budget')}
+                className="flex items-center space-x-3 font-semibold text-gray-700 hover:text-blue-500 transition text-md"
               >
-                <FaMoneyBillWave className="mr-3 text-xl" />
+                <FaMoneyBillWave className="text-lg" />
                 <span>Budget</span>
               </a>
             </li>
-
-            {/* Empty space */}
-            <li className="mt-auto"></li>
           </ul>
         </nav>
-      </div>
+      </aside>
     </>
   );
 };

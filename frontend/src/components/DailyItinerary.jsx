@@ -19,7 +19,7 @@ const DailyItinerary = ({ itineraryDays }) => {
   return (
     <div className="space-y-4">
       {itineraryDays.map((day, index) => (
-        <div key={index} className="bg-white rounded-xl shadow-md overflow-hidden">
+        <div key={index} className="bg-white  rounded-xl shadow-sm border border-gray-200 overflow-hidden">
           <button
             onClick={() => toggleDay(index)}
             className="w-full flex justify-between items-center p-5 text-left font-bold text-xl text-gray-800 focus:outline-none"

@@ -1,26 +1,23 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import HotelCard from './HotelCard';
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import HorizontalScrollContainer from './HorizontalScrollContainer';
 
 const HotelRecommendations = ({ hotels }) => {
-  const scrollContainerRef = useRef(null);
-
-  const scroll = (scrollOffset) => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({ left: scrollOffset, behavior: 'smooth' });
-    }
-  };
+  if (!hotels || hotels.length === 0) {
+    return (
+      <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm text-gray-500">
+        No hotel recommendations available.
+      </div>
+    );
+  }
 
   return (
-    <div className="relative">
-      <div
-        ref={scrollContainerRef}
-        className="flex overflow-x-auto py-4 scroll-smooth scrollbar-hide"
-      >
+    <div>
+      <HorizontalScrollContainer items={hotels} title={`${hotels.length} hotels found based on your interests`}>
         {hotels.map((hotel, index) => (
           <HotelCard key={index} hotel={hotel} />
         ))}
-      </div>
+      </HorizontalScrollContainer>
     </div>
   );
 };

@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
-import { FaChevronDown, FaChevronUp, FaMapMarkerAlt, FaRegClock } from 'react-icons/fa';
+import {
+  FaChevronDown,
+  FaChevronUp,
+  FaMapMarkerAlt,
+  FaRegClock,
+  FaImage,
+} from 'react-icons/fa';
 
 const DailyItinerary = ({ itineraryDays }) => {
   const [openDay, setOpenDay] = useState(0); // Open the first day by default
@@ -19,7 +25,10 @@ const DailyItinerary = ({ itineraryDays }) => {
   return (
     <div className="space-y-4">
       {itineraryDays.map((day, index) => (
-        <div key={index} className="bg-white  rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div
+          key={index}
+          className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden"
+        >
           <button
             onClick={() => toggleDay(index)}
             className="w-full flex justify-between items-center p-5 text-left font-bold text-xl text-gray-800 focus:outline-none"
@@ -27,6 +36,7 @@ const DailyItinerary = ({ itineraryDays }) => {
             <span>Day {day.day}</span>
             {openDay === index ? <FaChevronUp /> : <FaChevronDown />}
           </button>
+
           {openDay === index && (
             <div className="px-5 pb-5">
               {/* Activities List */}
@@ -42,25 +52,55 @@ const DailyItinerary = ({ itineraryDays }) => {
                 </ul>
               </div>
 
-              {/* Places with Images */}
+              {/* Places to Visit */}
               {day.places && day.places.length > 0 && (
                 <div>
                   <h3 className="text-lg font-semibold text-gray-700 mb-3">Places to Visit</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {day.places.map((place, i) => (
-                      <a href={place.details_url || '#'} key={i} target="_blank" rel="noopener noreferrer" className="group">
-                        <div className="relative rounded-lg overflow-hidden h-40">
-                          <img 
-                            src={place.image || 'https://placehold.co/400x300?text=Place'}
-                            alt={place.name}
-                            className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-300"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent flex items-end p-4">
-                            <h4 className="text-white font-bold text-md">{place.name}</h4>
+                    {day.places.map((place, i) => {
+                      const hasImage = !!place.image;
+
+                      return (
+                        <a
+                          href={place.details_url || '#'}
+                          key={i}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="group block bg-white rounded-lg shadow-sm overflow-hidden hover:-translate-y-1 transition-transform duration-300"
+                        >
+                          <div className="relative h-40 bg-gray-100 flex items-center justify-center overflow-hidden">
+                            {hasImage ? (
+                              <img
+                                src={place.image}
+                                alt={place.name}
+                                className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-300"
+                                onError={(e) => {
+                                  e.target.onerror = null;
+                                  e.target.src = ''; // fallback to placeholder block
+                                }}
+                              />
+                            ) : (
+                              <div className="flex flex-col items-center justify-center text-gray-400">
+                                <FaImage className="text-4xl mb-2" />
+                                <span className="text-sm">No Image Available</span>
+                              </div>
+                            )}
+
+                            {hasImage && (
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent flex items-end p-4">
+                                <h4 className="text-white font-bold text-md truncate">{place.name}</h4>
+                              </div>
+                            )}
                           </div>
-                        </div>
-                      </a>
-                    ))}
+
+                          {!hasImage && (
+                            <div className="p-4">
+                              <h4 className="font-semibold text-gray-800 text-md truncate">{place.name}</h4>
+                            </div>
+                          )}
+                        </a>
+                      );
+                    })}
                   </div>
                 </div>
               )}

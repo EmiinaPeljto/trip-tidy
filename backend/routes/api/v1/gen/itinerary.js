@@ -4,5 +4,6 @@ const itineraryController = require("../../../../controllers/itineraryController
 const authenticateToken = require("../../../../middleware/auth");
 
 router.post("/createItinerary", authenticateToken, itineraryController.createItinerary);
+router.get("/getItineraryById/:id", itineraryController.getItineraryById);
 
 module.exports = router;

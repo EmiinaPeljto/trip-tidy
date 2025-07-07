@@ -8,7 +8,7 @@ const locations = [
   { value: "SJJ", label: "Sarajevo (SJJ)" },
   { value: "LON", label: "London (LON)" },
   { value: "NYC", label: "New York (NYC)" },
-  // Add more locations here
+  { value: "PAR", label: "Paris (PAR)" },
 ];
 
 const ItineraryFirstStepForm = ({ onNext, initialData = {} }) => {

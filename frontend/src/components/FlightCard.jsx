@@ -37,6 +37,7 @@ const FlightCard = ({ flight }) => {
     return (
       <div className="flex justify-between items-center w-full text-center">
         <div>
+          
           <div className="text-xl font-bold">{departure.time}</div>
           <div className="font-semibold">{departure.period}</div>
           <div className="text-sm text-gray-500 mt-1 uppercase">{segment.departure_code || ''}</div>
@@ -66,7 +67,7 @@ const FlightCard = ({ flight }) => {
   }
 
   return (
-    <div className="w-96 flex bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+    <div className="w-[28rem] flex flex-shrink-0 bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
       <div className="flex-grow p-4 space-y-4">
         {/* Outbound */}
         <div>

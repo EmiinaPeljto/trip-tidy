@@ -1,28 +1,23 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import PlaceCard from './PlaceCard';
+import HorizontalScrollContainer from './HorizontalScrollContainer';
 
 const PlaceRecommendations = ({ places }) => {
   if (!places || places.length === 0) {
-    return <p className="text-gray-500">Place recommendations will appear here.</p>;
+    return (
+      <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm text-gray-500">
+        No place recommendations available.
+      </div>
+    );
   }
- const scrollContainerRef = useRef(null);
-
-  const scroll = (scrollOffset) => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({ left: scrollOffset, behavior: 'smooth' });
-    }
-  };
 
   return (
-    <div className="relative">
-      <div
-        ref={scrollContainerRef}
-        className="flex overflow-x-auto py-4 scroll-smooth scrollbar-hide"
-      >
-      {places.map((place, index) => (
-        <PlaceCard key={index} place={place} />
-      ))} 
-      </div>
+    <div>
+      <HorizontalScrollContainer items={places} title={`${places.length} places found based on your interests`}>
+        {places.map((place, index) => (
+          <PlaceCard key={index} place={place} />
+        ))}
+      </HorizontalScrollContainer>
     </div>
   );
 };

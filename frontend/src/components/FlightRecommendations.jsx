@@ -1,5 +1,6 @@
 import React from 'react';
 import FlightCard from './FlightCard';
+import HorizontalScrollContainer from './HorizontalScrollContainer';
 
 const FlightRecommendations = ({ flights }) => {
   // If there are no flights, display a fallback message.
@@ -12,12 +13,12 @@ const FlightRecommendations = ({ flights }) => {
   }
 
   return (
-    <div className="flex overflow-x-auto space-x-6 pb-4 -mx-4 px-4">
-      {flights.map((flight, index) => (
-        <div key={index} className="flex-shrink-0">
-          <FlightCard flight={flight} />
-        </div>
-      ))}
+    <div>
+      <HorizontalScrollContainer items={flights} title={`${flights.length} flights found based on your preferences`}>
+        {flights.map((flight, index) => (
+          <FlightCard key={index} flight={flight} />
+        ))}
+      </HorizontalScrollContainer>
     </div>
   );
 };

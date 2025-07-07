@@ -1,7 +1,5 @@
 import React from 'react';
-import { FaMapMarkerAlt } from 'react-icons/fa';
-
-const placeholderImage = `data:image/svg+xml;charset=UTF-8,%3csvg width='400' height='300' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300' preserveAspectRatio='none'%3e%3crect width='100%25' height='100%25' fill='%23cccccc'/%3e%3ctext x='50%25' y='50%25' fill='%23333333' dy='.3em' font-family='Arial, sans-serif' font-size='18' text-anchor='middle'%3eNo Image%3c/text%3e%3c/svg%3e`;
+import { FaMapMarkerAlt, FaImage } from 'react-icons/fa';
 
 const PlaceCard = ({ place }) => {
   const {
@@ -11,28 +9,39 @@ const PlaceCard = ({ place }) => {
     details_url = '#',
   } = place || {};
 
-  const displayImage = imageUrl || placeholderImage;
+  const isImageAvailable = !!imageUrl;
 
   return (
     <a
-      href={details_url || '#'}
+      href={details_url}
       target="_blank"
       rel="noopener noreferrer"
       className="block w-64 flex-shrink-0 mr-6 bg-white rounded-xl shadow-md overflow-hidden transform hover:-translate-y-1 transition-transform duration-300 group"
     >
-      <div className="h-40 overflow-hidden">
-      <img
-  src={displayImage}
-  alt={`Photo of ${title}`}
-  className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-300"
-  onError={e => { e.target.onerror = null; e.target.src = placeholderImage; }}
-/>
+      <div className="h-40 bg-gray-100 flex items-center justify-center overflow-hidden">
+        {isImageAvailable ? (
+          <img
+            src={imageUrl}
+            alt={`Photo of ${title}`}
+            className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-300"
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = ''; // Trigger fallback rendering
+            }}
+          />
+        ) : (
+          <div className="flex flex-col items-center justify-center text-gray-400">
+            <FaImage className="text-4xl mb-2" />
+            <span className="text-sm">No Image Available</span>
+          </div>
+        )}
       </div>
+
       <div className="p-4">
-        <h3 className="font-bold text-lg text-gray-800 truncate">{title || 'Unnamed Place'}</h3>
+        <h3 className="font-bold text-lg text-gray-800 truncate">{title}</h3>
         <div className="flex items-center mt-2 text-gray-500">
           <FaMapMarkerAlt className="mr-2 flex-shrink-0" />
-          <p className="text-sm truncate">{location || 'No location provided'}</p>
+          <p className="text-sm truncate">{location}</p>
         </div>
       </div>
     </a>

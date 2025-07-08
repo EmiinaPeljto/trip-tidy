@@ -7,9 +7,10 @@ import {
   FaChevronUp,
   FaBars,
   FaTimes,
+  FaSave,
 } from 'react-icons/fa';
 
-const SideNavbar = ({ itinerary }) => {
+const SideNavbar = ({ itinerary, onSave }) => {
   const [isSummaryOpen, setSummaryOpen] = useState(true);
   const [isItineraryOpen, setItineraryOpen] = useState(true);
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -56,7 +57,7 @@ const SideNavbar = ({ itinerary }) => {
       {/* Sidebar */}
       <aside
         className={`fixed inset-y-0 left-0 transform ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
-        md:relative md:translate-x-0 transition-transform duration-300 ease-in-out w-64 bg-white h-full p-6 border-r border-gray-200 shadow-md md:shadow-none`}
+        md:relative md:translate-x-0 transition-transform duration-300 ease-in-out w-64 bg-white h-full p-6 border-r border-gray-200 shadow-md md:shadow-none `}
       >
         <nav className="flex flex-col h-full justify-between">
           <ul className="space-y-4 overflow-y-auto flex-grow">
@@ -66,10 +67,42 @@ const SideNavbar = ({ itinerary }) => {
               isOpen={isSummaryOpen}
               toggle={() => setSummaryOpen(!isSummaryOpen)}
             >
-              <li><a href="#travel-checklist" onClick={(e) => handleScroll(e, 'travel-checklist')} className="hover:text-blue-500">Travel Checklist</a></li>
-              <li><a href="#hotel-recommendations" onClick={(e) => handleScroll(e, 'hotel-recommendations')} className="hover:text-blue-500">Hotel Recommendations</a></li>
-              <li><a href="#flights" onClick={(e) => handleScroll(e, 'flights')} className="hover:text-blue-500">Flights</a></li>
-              <li><a href="#place-recommendations" onClick={(e) => handleScroll(e, 'place-recommendations')} className="hover:text-blue-500">Place Recommendations</a></li>
+              <li>
+                <a
+                  href="#travel-checklist"
+                  onClick={(e) => handleScroll(e, 'travel-checklist')}
+                  className="hover:text-blue-500"
+                >
+                  Travel Checklist
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#hotel-recommendations"
+                  onClick={(e) => handleScroll(e, 'hotel-recommendations')}
+                  className="hover:text-blue-500"
+                >
+                  Hotel Recommendations
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#flights"
+                  onClick={(e) => handleScroll(e, 'flights')}
+                  className="hover:text-blue-500"
+                >
+                  Flights
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#place-recommendations"
+                  onClick={(e) => handleScroll(e, 'place-recommendations')}
+                  className="hover:text-blue-500"
+                >
+                  Place Recommendations
+                </a>
+              </li>
             </NavSection>
 
             <NavSection
@@ -102,6 +135,20 @@ const SideNavbar = ({ itinerary }) => {
               </a>
             </li>
           </ul>
+
+          {/* Save Itinerary Button */}
+          <ul className="mt-4 border-t pt-4 border-gray-200">
+    {/* 👇 Subtle Save Link */}
+    <li>
+      <button
+        onClick={onSave}
+        className="w-full flex items-center space-x-3 font-semibold text-gray-700 hover:text-blue-500 transition text-md"
+      >
+        <FaSave className="text-lg" />
+        <span>Save Itinerary</span>
+      </button>
+    </li>
+  </ul>
         </nav>
       </aside>
     </>

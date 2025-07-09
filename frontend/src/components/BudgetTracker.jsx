@@ -5,9 +5,8 @@ import 'react-circular-progressbar/dist/styles.css';
 import ExpensesModal from './ExpensesModal';
 import ExpenseCard from './ExpenseCard';
 
-const BudgetTracker = ({ budget }) => {
+const BudgetTracker = ({ budget, expenses, setExpenses }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [expenses, setExpenses] = useState([]);
 
   const handleAddExpense = (newExpense) => {
     setExpenses([...expenses, newExpense]);
@@ -17,7 +16,7 @@ const BudgetTracker = ({ budget }) => {
     setExpenses(expenses.filter((_, index) => index !== indexToDelete));
   };
 
-  const spent = expenses.reduce((total, expense) => total + expense.price, 0);
+  const spent = expenses.reduce((total, expense) => total + (parseFloat(expense.price) || 0), 0);
   const percentageSpent = budget > 0 ? (spent / budget) * 100 : 0;
   const remaining = Math.max(budget - spent, 0);
 

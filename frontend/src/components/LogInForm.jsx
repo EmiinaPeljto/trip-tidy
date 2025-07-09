@@ -27,7 +27,8 @@ const LogInForm = () => {
     });
     if (result) {
       successToast("Login successful!");
-      // Redirect if needed, e.g. navigate("/dashboard");
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("user", JSON.stringify(response.data.user));
     }
   };
 

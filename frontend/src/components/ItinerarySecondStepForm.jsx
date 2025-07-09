@@ -1,36 +1,41 @@
-import React, { useState, useEffect } from 'react';
-import { FaUser, FaUsers, FaUserFriends, FaHeart } from 'react-icons/fa';
+import React, { useState, useEffect } from "react";
+import { FaUser, FaUsers, FaUserFriends, FaHeart } from "react-icons/fa";
 
 const tripTypes = [
-  { id: 'solo', label: 'Solo', icon: <FaUser size={40} /> },
-  { id: 'family', label: 'Family', icon: <FaUsers size={40} /> },
-  { id: 'friends', label: 'Friends', icon: <FaUserFriends size={40} /> },
-  { id: 'couple', label: 'Couple', icon: <FaHeart size={40} /> },
+  { id: "solo", label: "Solo", icon: <FaUser size={40} /> },
+  { id: "family", label: "Family", icon: <FaUsers size={40} /> },
+  { id: "friends", label: "Friends", icon: <FaUserFriends size={40} /> },
+  { id: "couple", label: "Couple", icon: <FaHeart size={40} /> },
 ];
 
 const ItinerarySecondStepForm = ({ onNext, onBack, initialData = {} }) => {
-  const [tripType, setTripType] = useState(initialData.tripType || '');
+  const [tripType, setTripType] = useState(initialData.tripType || "");
   const [adults, setAdults] = useState(initialData.adults || 1);
 
   useEffect(() => {
-    if (tripType === 'solo') {
+    if (tripType === "solo") {
       setAdults(1);
-    } else if (tripType === 'couple') {
+    } else if (tripType === "couple") {
       setAdults(2);
-    } else if (tripType === 'friends' && adults < 1) {
+    } else if (tripType === "friends" && adults < 1) {
       setAdults(1);
-    } else if (tripType === 'family' && adults < 2) {
+    } else if (tripType === "family" && adults < 2) {
       setAdults(2);
     }
   }, [tripType]);
 
   const handleNext = () => {
+    let fixedAdults = adults;
+    if (tripType === "solo") fixedAdults = 1;
+    if (tripType === "couple") fixedAdults = 2;
+    if (tripType === "family" && fixedAdults < 2) fixedAdults = 2;
+    if (tripType === "friends" && fixedAdults < 1) fixedAdults = 1;
     if (onNext) {
-      onNext({ tripType, adults });
+      onNext({ tripType, adults: fixedAdults });
     }
   };
 
-  const showAdultsInput = tripType === 'family' || tripType === 'friends';
+  const showAdultsInput = tripType === "family" || tripType === "friends";
 
   return (
     <section className="flex flex-col items-center justify-center h-screen bg-white p-8">
@@ -48,10 +53,10 @@ const ItinerarySecondStepForm = ({ onNext, onBack, initialData = {} }) => {
               key={id}
               type="button"
               onClick={() => setTripType(id)}
-              className={`p-6 rounded-lg border-2 text-left transition-all duration-200 flex flex-col items-center justify-center gap-4 ${ 
+              className={`p-6 rounded-lg border-2 text-left transition-all duration-200 flex flex-col items-center justify-center gap-4 ${
                 tripType === id
-                  ? 'bg-[#5AB1F5] border-[#5AB1F5] text-white shadow-lg'
-                  : 'bg-white border-gray-300 hover:border-[#5AB1F5] hover:bg-gray-50'
+                  ? "bg-[#5AB1F5] border-[#5AB1F5] text-white shadow-lg"
+                  : "bg-white border-gray-300 hover:border-[#5AB1F5] hover:bg-gray-50"
               }`}
             >
               {icon}
@@ -62,16 +67,24 @@ const ItinerarySecondStepForm = ({ onNext, onBack, initialData = {} }) => {
 
         {showAdultsInput && (
           <div className="mt-8 max-w-xs mx-auto text-left">
-            <label htmlFor="adults" className="block mb-2 text-sm font-medium text-gray-700">
+            <label
+              htmlFor="adults"
+              className="block mb-2 text-sm font-medium text-gray-700"
+            >
               Number of adults
             </label>
             <input
               type="number"
               id="adults"
               name="adults"
-              min={tripType === 'family' ? 2 : 1}
+              min={tripType === "family" ? 2 : 1}
               value={adults}
-              onChange={(e) => setAdults(parseInt(e.target.value, 10) || (tripType === 'family' ? 2 : 1))}
+              onChange={(e) =>
+                setAdults(
+                  parseInt(e.target.value, 10) ||
+                    (tripType === "family" ? 2 : 1)
+                )
+              }
               required
               className="h-10 w-full rounded-md border border-gray-300 px-3 text-sm focus:border-[#5AB1F5] focus:outline-none"
             />

@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { DateRange } from "react-date-range";
-import "react-date-range/dist/styles.css"; // main style file
-import "react-date-range/dist/theme/default.css"; // theme css file
+import "react-date-range/dist/styles.css";
+import "react-date-range/dist/theme/default.css";
 import { format, addDays } from "date-fns";
 
 const locations = [
@@ -41,7 +41,7 @@ const ItineraryFirstStepForm = ({ onNext, initialData = {} }) => {
   const handleNextClick = () => {
     const finalData = {
       ...formData,
-      dateRange: dateRange[0], // Pass the raw date object
+      dateRange: dateRange[0],
     };
     if (onNext) onNext(finalData);
   };
@@ -49,7 +49,10 @@ const ItineraryFirstStepForm = ({ onNext, initialData = {} }) => {
   // Close date picker when clicking outside
   useEffect(() => {
     function handleClickOutside(event) {
-      if (datePickerRef.current && !datePickerRef.current.contains(event.target)) {
+      if (
+        datePickerRef.current &&
+        !datePickerRef.current.contains(event.target)
+      ) {
         setDatePickerOpen(false);
       }
     }
@@ -59,20 +62,29 @@ const ItineraryFirstStepForm = ({ onNext, initialData = {} }) => {
     };
   }, [datePickerRef]);
 
+  // Safe date formatting
+  const formatDateSafe = (date) => {
+    if (!date) return "";
+    const d = new Date(date);
+    if (isNaN(d)) return "";
+    return format(d, "MM/dd/yyyy");
+  };
+
   return (
     <section className="flex flex-col items-center justify-center h-screen bg-white p-8">
       <div className="text-center w-full max-w-4xl">
-        {/* Heading */}
         <h1 className="text-3xl sm:text-4xl font-semibold text-gray-800">
           Let us take care of everything for your perfect trip!
         </h1>
         <p className="mt-3 text-gray-600 text-lg">Help us tailor your trip</p>
 
-        {/* Form */}
         <div className="mt-12 w-full grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8 items-start">
           {/* Origin */}
           <div className="flex flex-col text-left">
-            <label htmlFor="origin" className="mb-2 text-sm font-medium text-gray-700">
+            <label
+              htmlFor="origin"
+              className="mb-2 text-sm font-medium text-gray-700"
+            >
               Select origin
             </label>
             <select
@@ -83,9 +95,15 @@ const ItineraryFirstStepForm = ({ onNext, initialData = {} }) => {
               required
               className="h-10 rounded-md border border-gray-300 px-3 text-sm focus:border-[#5AB1F5] focus:outline-none bg-white"
             >
-              <option value="" disabled>Select an origin</option>
+              <option value="" disabled>
+                Select an origin
+              </option>
               {locations.map((loc) => (
-                <option key={loc.value} value={loc.value} disabled={loc.value === formData.destination}>
+                <option
+                  key={loc.value}
+                  value={loc.value}
+                  disabled={loc.value === formData.destination}
+                >
                   {loc.label}
                 </option>
               ))}
@@ -94,7 +112,10 @@ const ItineraryFirstStepForm = ({ onNext, initialData = {} }) => {
 
           {/* Destination */}
           <div className="flex flex-col text-left">
-            <label htmlFor="destination" className="mb-2 text-sm font-medium text-gray-700">
+            <label
+              htmlFor="destination"
+              className="mb-2 text-sm font-medium text-gray-700"
+            >
               Enter destination
             </label>
             <select
@@ -105,9 +126,15 @@ const ItineraryFirstStepForm = ({ onNext, initialData = {} }) => {
               required
               className="h-10 rounded-md border border-gray-300 px-3 text-sm focus:border-[#5AB1F5] focus:outline-none bg-white"
             >
-              <option value="" disabled>Select a destination</option>
+              <option value="" disabled>
+                Select a destination
+              </option>
               {locations.map((loc) => (
-                <option key={loc.value} value={loc.value} disabled={loc.value === formData.origin}>
+                <option
+                  key={loc.value}
+                  value={loc.value}
+                  disabled={loc.value === formData.origin}
+                >
                   {loc.label}
                 </option>
               ))}
@@ -116,17 +143,21 @@ const ItineraryFirstStepForm = ({ onNext, initialData = {} }) => {
 
           {/* Date Range Picker */}
           <div className="flex flex-col text-left relative" ref={datePickerRef}>
-            <label htmlFor="date" className="mb-2 text-sm font-medium text-gray-700">
+            <label
+              htmlFor="date"
+              className="mb-2 text-sm font-medium text-gray-700"
+            >
               Choose date
             </label>
             <input
               type="text"
               id="date"
               readOnly
-              value={`${format(dateRange[0].startDate, "MM/dd/yyyy")} | ${format(
-                dateRange[0].endDate,
-                "MM/dd/yyyy"
-              )}`}
+              value={
+                dateRange[0]?.startDate && dateRange[0]?.endDate
+                  ? `${formatDateSafe(dateRange[0].startDate)} | ${formatDateSafe(dateRange[0].endDate)}`
+                  : ""
+              }
               onClick={() => setDatePickerOpen(!isDatePickerOpen)}
               className="h-10 rounded-md border border-gray-300 px-3 text-sm focus:border-[#5AB1F5] focus:outline-none cursor-pointer"
             />
@@ -144,7 +175,10 @@ const ItineraryFirstStepForm = ({ onNext, initialData = {} }) => {
 
           {/* Budget */}
           <div className="flex flex-col text-left">
-            <label htmlFor="budget" className="mb-2 text-sm font-medium text-gray-700">
+            <label
+              htmlFor="budget"
+              className="mb-2 text-sm font-medium text-gray-700"
+            >
               Enter your budget (USD)
             </label>
             <input

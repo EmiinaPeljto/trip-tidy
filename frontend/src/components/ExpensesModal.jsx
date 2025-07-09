@@ -12,7 +12,7 @@ const ExpensesModal = ({ isOpen, onClose, onAddExpense }) => {
       alert('Please fill in all required fields.');
       return;
     }
-    onAddExpense({ title, category, price: parseFloat(price) });
+    onAddExpense({ expenses_title: title, category, price: parseFloat(price) });
     setTitle('');
     setCategory('');
     setPrice('');

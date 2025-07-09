@@ -12,6 +12,7 @@ import "./App.css";
 import { Toaster } from "react-hot-toast";
 import NavBar from "./components/NavBar";
 
+
 function App() {
   useGoogleToken();
   const location = useLocation();
@@ -33,6 +34,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/create-itinerary" element={<CreateItinerary />} />
           <Route path="/itinerary" element={<ItineraryPage />} />
+          <Route path="/itinerary/:id" element={<ItineraryPage />} />
             
         </Routes>
       </div>

@@ -111,12 +111,24 @@ exports.login = async (req, res) => {
         id: user.id,
         username: user.username,
         email: user.email,
+        first_name: user.first_name,
+        last_name: user.last_name,
       },
       process.env.JWT_SECRET || "default_secret",
       { expiresIn: "168h" }
     );
 
-    res.status(200).json({ message: "Login successful", token, user });
+    res.status(200).json({
+      message: "Login successful",
+      token,
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        first_name: user.first_name,
+        last_name: user.last_name,
+      },
+    });
   } catch (error) {
     res.status(500).json({ message: "Error logging in", error });
   }
@@ -194,4 +206,17 @@ exports.resetPassword = async (req, res) => {
   res
     .status(200)
     .json({ message: "Password has been reset. You can now log in." });
+};
+
+exports.getMe = async (req, res) => {
+  try {
+    // req.user is set by authenticateToken middleware
+    const user = await userModel.getUserById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    res.json({ user });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch user info" });
+  }
 };

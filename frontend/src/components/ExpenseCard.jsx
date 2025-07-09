@@ -26,8 +26,8 @@ const ExpenseCard = ({ expense, onDelete }) => {
   return (
     <div className="flex items-center justify-between p-4 bg-white rounded-lg shadow-md mb-4">
       <div className="flex items-center">
-        <div className="p-3 bg-gray-200 rounded-full">
-          {React.cloneElement(icon, { size: 24, className: "text-gray-600" })}
+        <div className="p-3 bg-[#5AB1F5] rounded-full">
+          {React.cloneElement(icon, { size: 24, className: "text-white" })}
         </div>
         <div className="ml-4">
           <p className="font-bold text-gray-800">

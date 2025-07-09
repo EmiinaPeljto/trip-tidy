@@ -56,7 +56,7 @@ exports.getHotels = async (
       }
     );
 
-    const hotels = hotelsResponse.data.result.slice(0, 3).map((hotel) => {
+    const hotels = hotelsResponse.data.result.slice(0, 10).map((hotel) => {
       let rawPrice =
         hotel.price_breakdown?.all_inclusive_price || hotel.min_total_price;
       let price =

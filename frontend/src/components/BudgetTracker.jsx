@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { FaEdit, FaPlus } from 'react-icons/fa';
+import { FaEdit, FaPlus, FaCheck, FaTimes } from 'react-icons/fa';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import ExpensesModal from './ExpensesModal';
 import ExpenseCard from './ExpenseCard';
 
-const BudgetTracker = ({ budget, expenses, setExpenses }) => {
+const BudgetTracker = ({ budget, expenses, setExpenses, setBudget }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingBudget, setEditingBudget] = useState(false);
+  const [budgetInput, setBudgetInput] = useState(budget);
 
   const handleAddExpense = (newExpense) => {
     setExpenses([...expenses, newExpense]);
@@ -14,6 +16,14 @@ const BudgetTracker = ({ budget, expenses, setExpenses }) => {
 
   const handleDeleteExpense = (indexToDelete) => {
     setExpenses(expenses.filter((_, index) => index !== indexToDelete));
+  };
+
+  const handleBudgetSave = () => {
+    const newBudget = parseFloat(budgetInput);
+    if (!isNaN(newBudget) && newBudget >= 0) {
+      setBudget(newBudget);
+      setEditingBudget(false);
+    }
   };
 
   const spent = expenses.reduce((total, expense) => total + (parseFloat(expense.price) || 0), 0);
@@ -49,14 +59,61 @@ const BudgetTracker = ({ budget, expenses, setExpenses }) => {
         <div className="flex-grow">
           <div className="flex justify-between items-center mb-2">
             <h2 className="text-2xl font-bold text-gray-800">Budget Tracker</h2>
-            <button className="text-gray-500 hover:text-gray-700">
-              <FaEdit size={20} />
-            </button>
           </div>
           <div className="space-y-2">
-            <p className="text-gray-600"><strong>Total Budget:</strong> ${budget.toLocaleString()}</p>
-            <p className="text-red-500"><strong>Spent:</strong> ${spent.toLocaleString()}</p>
-            <p className="text-green-500"><strong>Remaining:</strong> ${remaining.toLocaleString()}</p>
+            <p className="text-gray-600 flex items-center gap-2">
+              <strong>Total Budget:</strong>
+              {!editingBudget ? (
+                <>
+                  ${budget.toLocaleString()}
+                  <button
+                    className="ml-2 text-gray-500 hover:text-gray-700"
+                    onClick={() => {
+                      setEditingBudget(true);
+                      setBudgetInput(budget);
+                    }}
+                    title="Edit Budget"
+                  >
+                    <FaEdit size={16} />
+                  </button>
+                </>
+              ) : (
+                <span className="flex items-center gap-2">
+                  <input
+                    type="number"
+                    min="0"
+                    className="border rounded px-2 py-1 w-24 text-sm"
+                    value={budgetInput}
+                    onChange={e => setBudgetInput(e.target.value)}
+                    onKeyDown={e => {
+                      if (e.key === "Enter") handleBudgetSave();
+                      if (e.key === "Escape") setEditingBudget(false);
+                    }}
+                    autoFocus
+                  />
+                  <button
+                    className="text-green-600 hover:text-green-800"
+                    onClick={handleBudgetSave}
+                    title="Save"
+                  >
+                    <FaCheck />
+                  </button>
+                  <button
+                    className="text-gray-400 hover:text-gray-600"
+                    onClick={() => setEditingBudget(false)}
+                    title="Cancel"
+                  >
+                    <FaTimes />
+                  </button>
+                </span>
+              )}
+            </p>
+            <p className="text-red-500">
+              <strong>Spent:</strong> ${spent.toLocaleString()}
+            </p>
+            <p className="text-green-500">
+              <strong>Remaining:</strong> ${remaining.toLocaleString()}
+            </p>
           </div>
         </div>
 

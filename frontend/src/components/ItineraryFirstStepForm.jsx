@@ -9,6 +9,22 @@ const locations = [
   { value: "LON", label: "London (LON)" },
   { value: "NYC", label: "New York (NYC)" },
   { value: "PAR", label: "Paris (PAR)" },
+  { value: "BER", label: "Berlin (BER)" },
+  { value: "IST", label: "Istanbul (IST)" },
+  { value: "ROM", label: "Rome (ROM)" },
+  { value: "MAD", label: "Madrid (MAD)" },
+  { value: "AMS", label: "Amsterdam (AMS)" },
+  { value: "BCN", label: "Barcelona (BCN)" },
+  { value: "VIE", label: "Vienna (VIE)" },
+  { value: "ZRH", label: "Zurich (ZRH)" },
+  { value: "ATH", label: "Athens (ATH)" },
+  { value: "BUD", label: "Budapest (BUD)" },
+  { value: "PRG", label: "Prague (PRG)" },
+  { value: "DUB", label: "Dublin (DUB)" },
+  { value: "BRU", label: "Brussels (BRU)" },
+  { value: "CPH", label: "Copenhagen (CPH)" },
+  { value: "MUC", label: "Munich (MUC)" },
+  { value: "FCO", label: "Rome Fiumicino (FCO)" },
 ];
 
 const ItineraryFirstStepForm = ({ onNext, initialData = {} }) => {

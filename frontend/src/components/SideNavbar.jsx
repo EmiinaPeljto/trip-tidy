@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   FaClipboardList,
   FaCalendarAlt,
@@ -8,21 +8,25 @@ import {
   FaBars,
   FaTimes,
   FaSave,
-} from 'react-icons/fa';
+} from "react-icons/fa";
 
-const SideNavbar = ({ itinerary, onSave }) => {
+const SideNavbar = ({ itinerary, onSave, onDaySelect }) => {
   const [isSummaryOpen, setSummaryOpen] = useState(true);
   const [isItineraryOpen, setItineraryOpen] = useState(true);
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const days = itinerary?.itinerary_days?.length || itinerary?.duration || 5;
+  const days =
+    itinerary?.itinerary_days?.length ||
+    itinerary?.itinerary?.itineraryDays?.length ||
+    itinerary?.duration ||
+    5;
   const dayLinks = Array.from({ length: days }, (_, i) => `Day ${i + 1}`);
 
   const handleScroll = (e, targetId) => {
     e.preventDefault();
     const targetElement = document.getElementById(targetId);
     if (targetElement) {
-      targetElement.scrollIntoView({ behavior: 'smooth' });
+      targetElement.scrollIntoView({ behavior: "smooth" });
     }
     setMobileMenuOpen(false);
   };
@@ -39,7 +43,11 @@ const SideNavbar = ({ itinerary, onSave }) => {
         </div>
         {isOpen ? <FaChevronUp /> : <FaChevronDown />}
       </button>
-      {isOpen && <ul className="mt-3 pl-7 space-y-2 text-gray-600 text-sm">{children}</ul>}
+      {isOpen && (
+        <ul className="mt-3 pl-7 space-y-2 text-gray-600 text-sm">
+          {children}
+        </ul>
+      )}
     </li>
   );
 
@@ -56,7 +64,9 @@ const SideNavbar = ({ itinerary, onSave }) => {
 
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 transform ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
+        className={`fixed inset-y-0 left-0 transform ${
+          isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+        }
         md:relative md:translate-x-0 transition-transform duration-300 ease-in-out w-64 bg-white h-full p-6 border-r border-gray-200 shadow-md md:shadow-none `}
       >
         <nav className="flex flex-col h-full justify-between">
@@ -70,7 +80,7 @@ const SideNavbar = ({ itinerary, onSave }) => {
               <li>
                 <a
                   href="#travel-checklist"
-                  onClick={(e) => handleScroll(e, 'travel-checklist')}
+                  onClick={(e) => handleScroll(e, "travel-checklist")}
                   className="hover:text-blue-500"
                 >
                   Travel Checklist
@@ -79,7 +89,7 @@ const SideNavbar = ({ itinerary, onSave }) => {
               <li>
                 <a
                   href="#hotel-recommendations"
-                  onClick={(e) => handleScroll(e, 'hotel-recommendations')}
+                  onClick={(e) => handleScroll(e, "hotel-recommendations")}
                   className="hover:text-blue-500"
                 >
                   Hotel Recommendations
@@ -88,7 +98,7 @@ const SideNavbar = ({ itinerary, onSave }) => {
               <li>
                 <a
                   href="#flights"
-                  onClick={(e) => handleScroll(e, 'flights')}
+                  onClick={(e) => handleScroll(e, "flights")}
                   className="hover:text-blue-500"
                 >
                   Flights
@@ -97,7 +107,7 @@ const SideNavbar = ({ itinerary, onSave }) => {
               <li>
                 <a
                   href="#place-recommendations"
-                  onClick={(e) => handleScroll(e, 'place-recommendations')}
+                  onClick={(e) => handleScroll(e, "place-recommendations")}
                   className="hover:text-blue-500"
                 >
                   Place Recommendations
@@ -113,13 +123,22 @@ const SideNavbar = ({ itinerary, onSave }) => {
             >
               {dayLinks.map((day, i) => (
                 <li key={i}>
-                  <a
-                    href={`#${day.toLowerCase().replace(' ', '-')}`}
-                    onClick={(e) => handleScroll(e, `${day.toLowerCase().replace(' ', '-')}`)}
-                    className="hover:text-blue-500"
+                  <button
+                    type="button"
+                    className="w-full text-left px-4 py-2 hover:text-blue-500 rounded"
+                    onClick={(e) => {
+                      // Optionally scroll to the itinerary section
+                      const itinerarySection =
+                        document.getElementById("itinerary-details");
+                      if (itinerarySection) {
+                        itinerarySection.scrollIntoView({ behavior: "smooth" });
+                      }
+                      if (onDaySelect) onDaySelect(i);
+                      setMobileMenuOpen(false);
+                    }}
                   >
                     {day}
-                  </a>
+                  </button>
                 </li>
               ))}
             </NavSection>
@@ -127,7 +146,7 @@ const SideNavbar = ({ itinerary, onSave }) => {
             <li>
               <a
                 href="#budget"
-                onClick={(e) => handleScroll(e, 'budget')}
+                onClick={(e) => handleScroll(e, "budget")}
                 className="flex items-center space-x-3 font-semibold text-gray-700 hover:text-blue-500 transition text-md"
               >
                 <FaMoneyBillWave className="text-lg" />
@@ -138,17 +157,16 @@ const SideNavbar = ({ itinerary, onSave }) => {
 
           {/* Save Itinerary Button */}
           <ul className="mt-4 border-t pt-4 border-gray-200">
-    {/* 👇 Subtle Save Link */}
-    <li>
-      <button
-        onClick={onSave}
-        className="w-full flex items-center space-x-3 font-semibold text-gray-700 hover:text-blue-500 transition text-md"
-      >
-        <FaSave className="text-lg" />
-        <span>Save Itinerary</span>
-      </button>
-    </li>
-  </ul>
+            <li>
+              <button
+                onClick={onSave}
+                className="w-full flex items-center space-x-3 font-semibold text-gray-700 hover:text-blue-500 transition text-md"
+              >
+                <FaSave className="text-lg" />
+                <span>Save Itinerary</span>
+              </button>
+            </li>
+          </ul>
         </nav>
       </aside>
     </>

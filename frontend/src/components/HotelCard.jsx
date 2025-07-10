@@ -1,18 +1,19 @@
-import React from 'react';
-import { FaMapMarkerAlt, FaStar } from 'react-icons/fa';
+import React from "react";
+import { FaMapMarkerAlt, FaStar } from "react-icons/fa";
 
 const HotelCard = ({ hotel }) => {
   // Use the exact field names from your JSON data, with fallbacks.
-  const { 
-    title = 'Hotel Name',
+  const {
+    title = "Hotel Name",
     imageUrl,
-    location = 'No address provided',
-    rating = 'N/A',
-    details_url = '#',
+    location = "No address provided",
+    rating = "N/A",
+    details_url = "#",
+    price = "Price not available",
   } = hotel || {};
 
   const handleImageError = (e) => {
-    e.target.src = 'https://placehold.co/300x200?text=Hotel+Image';
+    e.target.src = "https://placehold.co/300x200?text=Hotel+Image";
   };
 
   return (
@@ -24,12 +25,15 @@ const HotelCard = ({ hotel }) => {
     >
       <img
         className="w-full h-40 object-cover"
-        src={imageUrl || 'https://placehold.co/300x200?text=Hotel+Image'}
+        src={imageUrl || "https://placehold.co/300x200?text=Hotel+Image"}
         alt={title}
         onError={handleImageError}
       />
       <div className="p-4">
-        <h3 className="text-lg font-semibold text-gray-800 truncate" title={title}>
+        <h3
+          className="text-lg font-semibold text-gray-800 truncate"
+          title={title}
+        >
           {title}
         </h3>
         <div className="flex items-center text-sm text-gray-600 mt-2">
@@ -41,6 +45,11 @@ const HotelCard = ({ hotel }) => {
         <div className="flex items-center text-sm text-yellow-500 mt-2">
           <FaStar className="mr-2 flex-shrink-0" />
           <span>{rating}</span>
+        </div>
+        <div
+          className="flex items-center text-left text-sm  mt-2"
+        >
+          {price}
         </div>
       </div>
     </a>

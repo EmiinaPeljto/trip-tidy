@@ -131,6 +131,7 @@ const ItineraryPage = () => {
       transportation_details: itinerary.flights,
       places: itinerary.place_recommendations,
       origin: itinerary.origin || "",
+      image: itinerary.image || "",
       itineraryDays: itinerary.itinerary?.itineraryDays || [],
       expenses,
     };
@@ -183,35 +184,76 @@ const ItineraryPage = () => {
       <div className="flex-1 flex overflow-hidden">
         <main className="flex-1 p-4 md:p-8 overflow-y-auto space-y-12">
           {/* Header Section */}
-          <section className="bg-white p-8 rounded-xl border border-gray-200 shadow">
-            <h1 className="text-3xl sm:text-4xl font-semibold text-gray-800 mb-3">
-              {itinerary.trip_title ||
-                `Your Amazing Trip to ${itinerary.destination}`}
-            </h1>
-            <textarea
-              className="w-full border rounded-md p-2 mb-4 text-gray-700"
-              rows={3}
-              value={itinerary.description || ""}
-              onChange={(e) =>
-                setItinerary((prev) => ({
-                  ...prev,
-                  description: e.target.value,
-                }))
-              }
-              placeholder="Add a description for your trip..."
-            />
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center border-t pt-4 gap-4 text-sm text-gray-700">
-              <div className="flex items-center bg-gray-100 border border-gray-200 px-4 py-2 rounded-xl">
-                <FaCalendarAlt className="mr-2 text-gray-500" />
-                <span>{`${format(startDate, "MMM d, yyyy")} - ${format(
-                  endDate,
-                  "MMM d, yyyy"
-                )}`}</span>
-              </div>
-              <div className="font-medium">
-                <span>
-                  {numDays} {numDays > 1 ? "Days" : "Day"}
-                </span>
+          <section
+            className="relative w-full flex items-center justify-center mb-8"
+            style={{
+              minHeight: 340,
+              backgroundImage: `url(${
+                itinerary.image ||
+                "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80"
+              })`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              borderRadius: "1.5rem",
+              overflow: "hidden",
+              boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.15)",
+            }}
+          >
+            {/* Decorative X lines */}
+            <svg
+              className="absolute inset-0 w-full h-full pointer-events-none"
+              style={{ zIndex: 1 }}
+              viewBox="0 0 100 100"
+              preserveAspectRatio="none"
+            >
+              <line
+                x1="0"
+                y1="0"
+                x2="100"
+                y2="100"
+                stroke="#fff"
+                strokeWidth="1.5"
+                strokeOpacity="0.25"
+              />
+              <line
+                x1="100"
+                y1="0"
+                x2="0"
+                y2="100"
+                stroke="#fff"
+                strokeWidth="1.5"
+                strokeOpacity="0.25"
+              />
+            </svg>
+
+            {/* Overlay for darkening the image */}
+            <div className="absolute inset-0 bg-black/30 z-10" />
+
+            {/* Centered info card */}
+            <div className="relative z-20 flex justify-center w-full">
+              <div className="bg-white/95 backdrop-blur-md rounded-xl shadow-lg p-6 sm:p-8 w-full max-w-2xl mx-4 my-12 flex flex-col gap-2 border border-gray-100">
+                <h1 className="text-3xl sm:text-4xl font-semibold text-gray-800 mb-2 text-center">
+                  {itinerary.trip_title ||
+                    `Your Amazing Trip to ${itinerary.destination}`}
+                </h1>
+                <p className="text-gray-700 mb-3 text-center">
+                  {itinerary.description || "No description yet."}
+                </p>
+                <div className="flex flex-row items-center justify-between border-t pt-4 gap-4 text-sm text-gray-700">
+                  <div className="flex items-center">
+                    <FaCalendarAlt className="mr-2 text-gray-500" />
+                    <span>
+                      {`${format(startDate, "MMM d, yyyy")} - ${format(
+                        endDate,
+                        "MMM d, yyyy"
+                      )}`}
+                    </span>
+                  </div>
+                  <div className="font-medium flex items-center">
+                    <span className="mr-1">Days:</span>
+                    <span>{numDays}</span>
+                  </div>
+                </div>
               </div>
             </div>
           </section>

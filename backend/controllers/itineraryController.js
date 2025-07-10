@@ -6,6 +6,7 @@ const hotelsService = require("../services/hotelService");
 const flightService = require("../services/flightService");
 const placesService = require("../services/placeService");
 const expensesModel = require("../models/expensesModel");
+const cityImageService = require("../services/cityImageService");
 
 exports.getAllStockItineraries = async (req, res) => {
   try {
@@ -55,16 +56,17 @@ exports.getItineraryById = async (req, res) => {
     }
 
     const formattedPlaces = (places || []).map((place) => ({
-  title: place.title || place.name || "No Title Provided",
-  imageUrl: place.imageUrl || place.image_url || null,
-  location: place.location || "No Location Provided",
-  details_url: place.details_url || "#",
-  coordinates: place.coordinates || null,
-}));
+      title: place.title || place.name || "No Title Provided",
+      imageUrl: place.imageUrl || place.image_url || null,
+      location: place.location || "No Location Provided",
+      details_url: place.details_url || "#",
+      coordinates: place.coordinates || null,
+    }));
 
     itineraryObject.place_recommendations = formattedPlaces;
 
     res.status(200).json(itineraryObject);
+    console.log("Returning itinerary:", itineraryObject);
   } catch (error) {
     console.error("Error fetching itinerary by ID:", error);
     res.status(500).json({ error: "Failed to fetch itinerary" });
@@ -77,6 +79,8 @@ exports.createItinerary = async (req, res) => {
     const {
       origin,
       destination,
+      originCode,
+      destinationCode,
       start_date,
       end_date,
       adults,
@@ -88,6 +92,8 @@ exports.createItinerary = async (req, res) => {
     if (
       !origin ||
       !destination ||
+      !originCode ||
+      !destinationCode ||
       !start_date ||
       !end_date ||
       !adults ||
@@ -111,6 +117,9 @@ exports.createItinerary = async (req, res) => {
       }
     }
     const preferencesString = preferenceNames.join(",");
+
+    const image = await cityImageService.fetchCityImage(destination);
+    console.log("City image fetched:", image);
 
     // Call external services
     const summaryData = await summaryService.generateSummary({
@@ -137,8 +146,8 @@ exports.createItinerary = async (req, res) => {
       adults
     );
     const transportation_details = await flightService.getFlights(
-      origin,
-      destination,
+      originCode,
+      destinationCode,
       start_date,
       end_date,
       adults
@@ -163,7 +172,8 @@ exports.createItinerary = async (req, res) => {
       JSON.stringify(transportation_details),
       JSON.stringify(places),
       origin,
-      connection // Pass the connection
+      image, 
+      connection
     );
 
     const itinerary_id = itinerary.insertId;
@@ -197,6 +207,7 @@ exports.createItinerary = async (req, res) => {
       rating: hotel.review || 0,
       details_url: hotel.bookingLink || "#",
       coordinates: hotel.coordinates || null,
+      price: hotel.price || "Price not available",
     }));
 
     const formattedPlaces = (places || []).map((place) => ({
@@ -270,6 +281,7 @@ exports.createItinerary = async (req, res) => {
       flights: formattedFlights,
       place_recommendations: formattedPlaces,
       itinerary: dayByDayData,
+      image
     };
 
     res.status(201).json({

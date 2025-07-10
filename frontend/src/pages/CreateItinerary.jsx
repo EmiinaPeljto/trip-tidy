@@ -60,7 +60,9 @@ const CreateItinerary = () => {
       : null;
 
     if (!startDate || isNaN(startDate)) {
-      alert("Start date is missing or invalid. Please return to the first step.");
+      alert(
+        "Start date is missing or invalid. Please return to the first step."
+      );
       setStep(1);
       return;
     }
@@ -76,8 +78,10 @@ const CreateItinerary = () => {
     // Build the payload for backend
     const payload = {
       user_id: user.id,
-      origin: finalData.origin || "SJJ",
+      origin: finalData.origin || "",
       destination: finalData.destination || "",
+      originCode: finalData.originCode || "",
+      destinationCode: finalData.destinationCode || "",
       budget: finalData.budget || "",
       start_date: format(startDate, "yyyy-MM-dd"),
       end_date: format(endDate, "yyyy-MM-dd"),

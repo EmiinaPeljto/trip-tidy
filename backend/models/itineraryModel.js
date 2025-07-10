@@ -81,10 +81,11 @@ exports.createItinerary = async (
   accommodation,
   transportation_details,
   places,
-  origin
+  origin,
+  image
 ) => {
   const [rows] = await db.query(
-    "INSERT INTO itineraries (destination, start_date, end_date,adults, budget, trip_type, trip_title, description, packing_notes, total_days, accommodation, transportation_details, places, origin) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+    "INSERT INTO itineraries (destination, start_date, end_date,adults, budget, trip_type, trip_title, description, packing_notes, total_days, accommodation, transportation_details, places, origin, image) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
     [
       destination,
       start_date,
@@ -100,6 +101,7 @@ exports.createItinerary = async (
       transportation_details,
       places,
       origin,
+      image
     ]
   );
   return rows;
@@ -145,6 +147,7 @@ exports.saveOrUpdateUserItineraryWithDaysAndExpenses = async ({
   transportation_details,
   places,
   origin,
+  image,
   itineraryDays, // array of day objects
   expenses, // array of expense objects
 }) => {
@@ -157,8 +160,8 @@ exports.saveOrUpdateUserItineraryWithDaysAndExpenses = async ({
       // Insert new itinerary
       const [itineraryRows] = await conn.query(
         `INSERT INTO itineraries 
-    (user_id, destination, start_date, end_date, adults, budget, trip_type, trip_title, description, packing_notes, total_days, accommodation, transportation_details, places, origin)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    (user_id, destination, start_date, end_date, adults, budget, trip_type, trip_title, description, packing_notes, total_days, accommodation, transportation_details, places, origin, image)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           user_id,
           destination,
@@ -175,6 +178,7 @@ exports.saveOrUpdateUserItineraryWithDaysAndExpenses = async ({
           JSON.stringify(transportation_details || []), // <-- stringify!
           JSON.stringify(places || []), // <-- stringify!
           origin,
+          image
         ]
       );
       itinerary_id = itineraryRows.insertId;
@@ -182,7 +186,7 @@ exports.saveOrUpdateUserItineraryWithDaysAndExpenses = async ({
       // Update existing itinerary
       await conn.query(
         `UPDATE itineraries SET 
-      user_id=?, destination=?, start_date=?, end_date=?, adults=?, budget=?, trip_type=?, trip_title=?, description=?, packing_notes=?, total_days=?, accommodation=?, transportation_details=?, places=?, origin=?
+      user_id=?, destination=?, start_date=?, end_date=?, adults=?, budget=?, trip_type=?, trip_title=?, description=?, packing_notes=?, total_days=?, accommodation=?, transportation_details=?, places=?, origin=?, image=?
      WHERE id=?`,
         [
           user_id,
@@ -200,6 +204,7 @@ exports.saveOrUpdateUserItineraryWithDaysAndExpenses = async ({
           JSON.stringify(transportation_details || []), // <-- stringify!
           JSON.stringify(places || []), // <-- stringify!
           origin,
+          image,
           id,
         ]
       );

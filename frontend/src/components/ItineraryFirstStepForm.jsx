@@ -5,26 +5,26 @@ import "react-date-range/dist/theme/default.css";
 import { format, addDays } from "date-fns";
 
 const locations = [
-  { value: "SJJ", label: "Sarajevo (SJJ)" },
-  { value: "LON", label: "London (LON)" },
-  { value: "NYC", label: "New York (NYC)" },
-  { value: "PAR", label: "Paris (PAR)" },
-  { value: "BER", label: "Berlin (BER)" },
-  { value: "IST", label: "Istanbul (IST)" },
-  { value: "ROM", label: "Rome (ROM)" },
-  { value: "MAD", label: "Madrid (MAD)" },
-  { value: "AMS", label: "Amsterdam (AMS)" },
-  { value: "BCN", label: "Barcelona (BCN)" },
-  { value: "VIE", label: "Vienna (VIE)" },
-  { value: "ZRH", label: "Zurich (ZRH)" },
-  { value: "ATH", label: "Athens (ATH)" },
-  { value: "BUD", label: "Budapest (BUD)" },
-  { value: "PRG", label: "Prague (PRG)" },
-  { value: "DUB", label: "Dublin (DUB)" },
-  { value: "BRU", label: "Brussels (BRU)" },
-  { value: "CPH", label: "Copenhagen (CPH)" },
-  { value: "MUC", label: "Munich (MUC)" },
-  { value: "FCO", label: "Rome Fiumicino (FCO)" },
+  { value: "SJJ", label: "Sarajevo (SJJ)", city: "Sarajevo" },
+  { value: "LON", label: "London (LON)", city: "London" },
+  { value: "NYC", label: "New York (NYC)", city: "New York" },
+  { value: "PAR", label: "Paris (PAR)", city: "Paris" },
+  { value: "BER", label: "Berlin (BER)", city: "Berlin" },
+  { value: "IST", label: "Istanbul (IST)", city: "Istanbul" },
+  { value: "ROM", label: "Rome (ROM)", city: "Rome" },
+  { value: "MAD", label: "Madrid (MAD)", city: "Madrid" },
+  { value: "AMS", label: "Amsterdam (AMS)", city: "Amsterdam" },
+  { value: "BCN", label: "Barcelona (BCN)", city: "Barcelona" },
+  { value: "VIE", label: "Vienna (VIE)", city: "Vienna" },
+  { value: "ZRH", label: "Zurich (ZRH)", city: "Zurich" },
+  { value: "ATH", label: "Athens (ATH)", city: "Athens" },
+  { value: "BUD", label: "Budapest (BUD)", city: "Budapest" },
+  { value: "PRG", label: "Prague (PRG)", city: "Prague" },
+  { value: "DUB", label: "Dublin (DUB)", city: "Dublin" },
+  { value: "BRU", label: "Brussels (BRU)", city: "Brussels" },
+  { value: "CPH", label: "Copenhagen (CPH)", city: "Copenhagen" },
+  { value: "MUC", label: "Munich (MUC)", city: "Munich" },
+  { value: "FCO", label: "Rome Fiumicino (FCO)", city: "Rome" },
 ];
 
 const ItineraryFirstStepForm = ({ onNext, initialData = {} }) => {
@@ -55,8 +55,22 @@ const ItineraryFirstStepForm = ({ onNext, initialData = {} }) => {
   };
 
   const handleNextClick = () => {
+    const selectedDestination = locations.find(
+      (loc) => loc.value === formData.destination
+    );
+    const selectedOrigin = locations.find(
+      (loc) => loc.value === formData.origin
+    );
     const finalData = {
       ...formData,
+      destinationCode: selectedDestination
+        ? selectedDestination.value
+        : formData.destination,
+      originCode: selectedOrigin ? selectedOrigin.value : formData.origin,
+      destination: selectedDestination
+        ? selectedDestination.city
+        : formData.destination,
+      origin: selectedOrigin ? selectedOrigin.city : formData.origin,
       dateRange: dateRange[0],
     };
     if (onNext) onNext(finalData);
@@ -171,7 +185,9 @@ const ItineraryFirstStepForm = ({ onNext, initialData = {} }) => {
               readOnly
               value={
                 dateRange[0]?.startDate && dateRange[0]?.endDate
-                  ? `${formatDateSafe(dateRange[0].startDate)} | ${formatDateSafe(dateRange[0].endDate)}`
+                  ? `${formatDateSafe(
+                      dateRange[0].startDate
+                    )} | ${formatDateSafe(dateRange[0].endDate)}`
                   : ""
               }
               onClick={() => setDatePickerOpen(!isDatePickerOpen)}

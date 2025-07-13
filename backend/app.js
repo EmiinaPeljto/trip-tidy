@@ -22,6 +22,7 @@ const dayByDayRoutes = require("./routes/api/v1/gen/dayByDay");
 const itineraryRoutes = require("./routes/api/v1/gen/itinerary");
 const emailVerificationRoutes = require("./routes/api/v1/gen/email_verification");
 const preferencesRoutes = require("./routes/api/v1/gen/preferences");
+const favoriteRoutes = require("./routes/api/v1/gen/favorites");
 
 app.use("/api/v1/gen/users", userRoutes);
 app.use("/api/v1/gen/hotels", hotelRoutes);
@@ -32,6 +33,7 @@ app.use("/api/v1/gen/dayByDay", dayByDayRoutes);
 app.use("/api/v1/gen/itinerary", itineraryRoutes);
 app.use("/api/v1/gen/email_verification", emailVerificationRoutes);
 app.use("/api/v1/gen/preferences", preferencesRoutes);
+app.use("/api/v1/gen/favorites", favoriteRoutes);
 
 app.listen(3001, () => {
   console.log("Server is running on port 3001");

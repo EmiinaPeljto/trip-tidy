@@ -3,13 +3,13 @@ const router = express.Router();
 const userController = require("../../../../controllers/userControllers");
 const passport = require("../../../../config/passport");
 const authenticateToken = require("../../../../middleware/auth");
-const jwt = require("jsonwebtoken"); 
+const jwt = require("jsonwebtoken");
 
-router.get("/all", userController.getAllUsers);
+router.get("/all",authenticateToken, userController.getAllUsers);
 router.post("/register", userController.register);
 router.post("/login", userController.login);
-router.get("/getUserById/:id", userController.getUserById);
-router.put("/updateUser/:id", userController.updateUser);
+router.get("/getUserById/:id",authenticateToken, userController.getUserById);
+router.put("/updateUser/:id",authenticateToken, userController.updateUser);
 router.get(
   "/google",
   passport.authenticate("google", { scope: ["profile", "email"] })
@@ -38,4 +38,5 @@ router.get(
 router.post("/forgot-password", userController.forgotPassword);
 router.post("/reset-password", userController.resetPassword);
 router.get("/me", authenticateToken, userController.getMe);
+router.post("/change-password",authenticateToken, userController.updateUserPassword);
 module.exports = router;

@@ -37,6 +37,14 @@ exports.getItineraryById = async (req, res) => {
       return res.status(404).json({ message: "Itinerary not found" });
     }
 
+    // Only allow access if the itinerary is public (user_id is null) or belongs to the logged-in user
+    if (itinerary.user_id && itinerary.user_id !== req.user.id) {
+      return res.status(403).json({ error: "Access denied" });
+    }
+    if (!itinerary) {
+      return res.status(404).json({ message: "Itinerary not found" });
+    }
+
     const itineraryObject = itinerary.toObject
       ? itinerary.toObject()
       : { ...itinerary };
@@ -172,7 +180,7 @@ exports.createItinerary = async (req, res) => {
       JSON.stringify(transportation_details),
       JSON.stringify(places),
       origin,
-      image, 
+      image,
       connection
     );
 
@@ -281,7 +289,7 @@ exports.createItinerary = async (req, res) => {
       flights: formattedFlights,
       place_recommendations: formattedPlaces,
       itinerary: dayByDayData,
-      image
+      image,
     };
 
     res.status(201).json({
@@ -328,6 +336,7 @@ exports.saveOrUpdateUserItinerary = async (req, res) => {
       transportation_details,
       places,
       origin,
+      image,
       itineraryDays,
       expenses,
     } = req.body;
@@ -364,6 +373,7 @@ exports.saveOrUpdateUserItinerary = async (req, res) => {
         transportation_details,
         places,
         origin,
+        image,
         itineraryDays,
         expenses,
       });

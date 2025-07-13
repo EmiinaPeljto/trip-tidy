@@ -7,11 +7,14 @@ import EmailVerification from "./pages/EmailVerification";
 import Home from "./pages/Home";
 import CreateItinerary from "./pages/CreateItinerary";
 import ItineraryPage from "./pages/ItineraryPage";
+import GuidePage from "./pages/GuidePage";
 import useGoogleToken from "./hooks/useGoogleToken";
 import "./App.css";
 import { Toaster } from "react-hot-toast";
 import NavBar from "./components/NavBar";
-
+import ItineraryGuidPage from "./pages/ItineraryGuidPage";
+import ProfilePage from "./pages/ProfilePage";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   useGoogleToken();
@@ -25,6 +28,7 @@ function App() {
           location.pathname !== "/verify-email" &&
           location.pathname !== "/forgot-password" &&
           location.pathname !== "/reset-password/:token" && <NavBar />}
+
         <Routes>
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<LogIn />} />
@@ -35,7 +39,19 @@ function App() {
           <Route path="/create-itinerary" element={<CreateItinerary />} />
           <Route path="/itinerary" element={<ItineraryPage />} />
           <Route path="/itinerary/:id" element={<ItineraryPage />} />
-            
+          <Route path="/guide" element={<GuidePage />} />
+          <Route
+            path="/itinerary-details/:id"
+            element={<ItineraryGuidPage />}
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </div>
     </>

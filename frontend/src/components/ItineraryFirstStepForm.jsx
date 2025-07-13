@@ -190,6 +190,7 @@ const ItineraryFirstStepForm = ({ onNext, initialData = {} }) => {
                     )} | ${formatDateSafe(dateRange[0].endDate)}`
                   : ""
               }
+              placeholder="e.g., 07/08/2025 | 07/15/2025"
               onClick={() => setDatePickerOpen(!isDatePickerOpen)}
               className="h-10 rounded-md border border-gray-300 px-3 text-sm focus:border-[#5AB1F5] focus:outline-none cursor-pointer"
             />

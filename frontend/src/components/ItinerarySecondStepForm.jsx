@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { FaUser, FaUsers, FaUserFriends, FaHeart } from "react-icons/fa";
 
 const tripTypes = [
@@ -11,8 +11,10 @@ const tripTypes = [
 const ItinerarySecondStepForm = ({ onNext, onBack, initialData = {} }) => {
   const [tripType, setTripType] = useState(initialData.tripType || "");
   const [adults, setAdults] = useState(initialData.adults || 1);
+  const secondRef = useRef(null);
 
   useEffect(() => {
+    secondRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
     if (tripType === "solo") {
       setAdults(1);
     } else if (tripType === "couple") {
@@ -38,7 +40,10 @@ const ItinerarySecondStepForm = ({ onNext, onBack, initialData = {} }) => {
   const showAdultsInput = tripType === "family" || tripType === "friends";
 
   return (
-    <section className="flex flex-col items-center justify-center h-screen bg-white p-8">
+    <section
+      className="flex flex-col items-center justify-center h-screen bg-white p-8"
+      ref={secondRef}
+    >
       <div className="text-center w-full max-w-4xl">
         <h1 className="text-3xl sm:text-4xl font-semibold text-gray-800">
           Create unforgettable memories—solo or with others.

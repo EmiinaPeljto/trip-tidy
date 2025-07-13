@@ -18,7 +18,8 @@ const useSaveOrUpdateItinerary = () => {
       return response.data;
     } catch (err) {
       setError(
-        err.response?.data?.error || "Failed to save itinerary. Please try again."
+        err.response?.data?.error ||
+          "Failed to save itinerary. Please try again."
       );
       setSuccess(false);
       return null;

@@ -2,7 +2,6 @@ import React from "react";
 import { FaMapMarkerAlt, FaStar } from "react-icons/fa";
 
 const HotelCard = ({ hotel }) => {
-  // Use the exact field names from your JSON data, with fallbacks.
   const {
     title = "Hotel Name",
     imageUrl,
@@ -42,18 +41,17 @@ const HotelCard = ({ hotel }) => {
             {location}
           </p>
         </div>
-        <div className="flex items-center text-sm text-yellow-500 mt-2">
-          <FaStar className="mr-2 flex-shrink-0" />
-          <span>{rating}</span>
-        </div>
-        <div
-          className="flex items-center text-left text-sm  mt-2"
-        >
-          {price}
+        <div className="flex items-center justify-between text-sm mt-2">
+          <div className="flex items-center text-yellow-500">
+            <FaStar className="mr-2 flex-shrink-0" />
+            <span>{rating}</span>
+          </div>
+          <div className="text-right  font-semibold ml-4">
+            {price !== "Price not available" ? `${price} €` : price}
+          </div>
         </div>
       </div>
     </a>
   );
 };
-
 export default HotelCard;

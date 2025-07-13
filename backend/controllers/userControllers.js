@@ -220,3 +220,42 @@ exports.getMe = async (req, res) => {
     res.status(500).json({ error: "Failed to fetch user info" });
   }
 };
+
+exports.updateUserPassword = async (req, res) => {
+  try {
+    const { userId, currentPassword, newPassword } = req.body;
+    if (!userId || !currentPassword || !newPassword) {
+      return res.status(400).json({ error: "All fields are required." });
+    }
+    if (newPassword.length < 8) {
+      return res
+        .status(400)
+        .json({ error: "Password must be at least 8 characters." });
+    }
+    const user = await userModel.getUserById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found." });
+    }
+    if (!user.password_hash) {
+      return res.status(500).json({ error: "User has no password set." });
+    }
+    const bcrypt = require("bcrypt");
+    const isMatch = await bcrypt.compare(currentPassword, user.password_hash);
+    if (!isMatch) {
+      return res.status(400).json({ error: "Current password is incorrect." });
+    }
+    if (await bcrypt.compare(newPassword, user.password_hash)) {
+      return res
+        .status(400)
+        .json({
+          error: "New password must be different from current password.",
+        });
+    }
+    const hashed = await bcrypt.hash(newPassword, 10);
+    await userModel.updateUserPassword(user.email, hashed);
+    res.json({ success: true });
+  } catch (err) {
+    console.error("Change password error:", err);
+    res.status(500).json({ error: "Failed to change password." });
+  }
+};

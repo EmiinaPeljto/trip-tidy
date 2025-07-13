@@ -50,13 +50,13 @@ const NavBar = () => {
               Home
             </Link>
             <Link
-              to="/planner"
+              to="/create-itinerary"
               className="border-b-2 border-transparent text-gray-700 hover:border-[#5AB1F5] hover:text-[#5AB1F5] px-3 py-2 text-sm font-medium transition"
             >
               Planner
             </Link>
             <Link
-              to="/guides"
+              to="/guide"
               className="border-b-2 border-transparent text-gray-700 hover:border-[#5AB1F5] hover:text-[#5AB1F5] px-3 py-2 text-sm font-medium transition"
             >
               Guides
@@ -94,18 +94,18 @@ const NavBar = () => {
                         Home
                       </Link>
                       <Link
-                        to="/planner"
+                        to="/create-itinerary"
                         className="block px-4 py-2 text-gray-800 hover:bg-[#e3f0fc] hover:text-[#5AB1F5] font-medium transition"
                         onClick={() => setDropdownOpen(false)}
                       >
                         Planner
                       </Link>
                       <Link
-                        to="/guides"
+                        to="/guide"
                         className="block px-4 py-2 text-gray-800 hover:bg-[#e3f0fc] hover:text-[#5AB1F5] font-medium transition"
                         onClick={() => setDropdownOpen(false)}
                       >
-                        Guides
+                        Guide
                       </Link>
                       <hr className="my-2 border-gray-200" />
                     </div>

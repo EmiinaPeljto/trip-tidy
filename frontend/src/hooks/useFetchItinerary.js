@@ -11,10 +11,17 @@ const useFetchItinerary = () => {
     setError(null);
     try {
       const res = await axiosInstance.get(`/itinerary/getItineraryById/${id}`);
-      setItinerary(res.data);
-      return res.data;
+      setItinerary(res.data); // <-- set directly
+      return res.data;        // <-- return directly
     } catch (err) {
-      setError(err.message || "Failed to fetch itinerary");
+      const status = err.response?.status;
+      setError(
+        status === 403
+          ? "You do not have access to this itinerary."
+          : status === 404
+          ? "Itinerary not found."
+          : err.message || "Failed to fetch itinerary"
+      );
       return null;
     } finally {
       setLoading(false);

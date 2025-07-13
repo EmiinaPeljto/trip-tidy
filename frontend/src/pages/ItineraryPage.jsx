@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useLocation, Link, useParams, useNavigate } from "react-router-dom";
 import { format, differenceInDays } from "date-fns";
 import {
@@ -29,14 +29,27 @@ const ItineraryPage = () => {
   const [expenses, setExpenses] = useState(initialItinerary.expenses || []);
   const navigate = useNavigate();
   const [openDayIdx, setOpenDayIdx] = useState(0);
+  const emptyDescRef = useRef(null);
+  const mainDescRef = useRef(null);
 
-  // Fetch itinerary if id in URL and not loaded yet
+  const autoResize = (ref) => {
+    if (ref && ref.current) {
+      ref.current.style.height = "auto";
+      ref.current.style.height = ref.current.scrollHeight + "px";
+    }
+  };
+  const { fetchItinerary, error } = useFetchItinerary();
+
   useEffect(() => {
+    autoResize(mainDescRef);
     if (id && (!itinerary.id || itinerary.id !== Number(id))) {
-      fetchItinerary(id).then((data) => {
-        if (data) {
-          setItinerary(data);
-          setExpenses(data.expenses || []);
+      fetchItinerary(id).then((result) => {
+        if (!result) {
+          errorToast("Itinerary not found or access denied.");
+          navigate("/");
+        } else {
+          setItinerary(result);
+          setExpenses(result.expenses || []);
         }
       });
     }
@@ -46,7 +59,6 @@ const ItineraryPage = () => {
   const user_id = user.id || itinerary?.user_id;
 
   const { saveOrUpdateItinerary } = useSaveOrUpdateItinerary();
-  const { fetchItinerary } = useFetchItinerary();
 
   const hotels = itinerary?.hotel_recommendations || [];
   const places =
@@ -110,6 +122,16 @@ const ItineraryPage = () => {
 
   // Save itinerary and refresh from backend
   const handleSaveItinerary = async () => {
+    const token = localStorage.getItem("jwt_token");
+    if (!token) {
+      errorToast("You must be logged in to save an itinerary.");
+      localStorage.setItem(
+        "redirectAfterLogin",
+        window.location.pathname + window.location.search
+      );
+      navigate("/login");
+      return;
+    }
     const payload = {
       id: itinerary.id,
       user_id,
@@ -137,15 +159,19 @@ const ItineraryPage = () => {
     };
 
     const result = await saveOrUpdateItinerary(payload);
-    if (result && result.itinerary_id) {
+    const updatedId = result?.itinerary_id || result?.id; // support both response types
+
+    if (updatedId) {
       // Fetch the updated itinerary from backend and update state
-      const updated = await fetchItinerary(result.itinerary_id);
+      const updated = await fetchItinerary(updatedId);
       if (updated) {
         setItinerary(updated);
         setExpenses(updated.expenses || []);
-        navigate(`/itinerary/${result.itinerary_id}`, { replace: true });
+        navigate(`/itinerary/${updatedId}`, { replace: true });
+        successToast("Itinerary saved successfully!");
+      } else {
+        errorToast("Failed to load updated itinerary.");
       }
-      successToast("Itinerary saved successfully!");
     } else {
       errorToast("Failed to save itinerary.");
     }
@@ -154,12 +180,29 @@ const ItineraryPage = () => {
   if (!itinerary || !itinerary.id) {
     return (
       <div className="flex flex-col items-center justify-center h-screen text-center bg-gray-50">
-        <h1 className="text-3xl font-bold text-gray-800 mb-4">
-          No Itinerary Data
-        </h1>
-        <p className="text-gray-600 mb-6">
-          It looks like you haven't generated an itinerary yet.
-        </p>
+        <input
+          type="text"
+          className="text-3xl sm:text-4xl font-semibold text-gray-800 mb-2 text-center bg-transparent border-b border-gray-300 focus:outline-none focus:border-blue-400 w-full"
+          value={itinerary.trip_title || ""}
+          onChange={(e) =>
+            setItinerary((prev) => ({ ...prev, trip_title: e.target.value }))
+          }
+          placeholder={`Your Amazing Trip to ${itinerary.destination}`}
+        />
+        <textarea
+          ref={emptyDescRef}
+          className="text-gray-700 mb-3 text-center bg-transparent border-b border-gray-200 focus:outline-none focus:border-blue-400 w-full"
+          value={itinerary.description || ""}
+          onChange={(e) =>
+            setItinerary((prev) => ({
+              ...prev,
+              description: e.target.value,
+            }))
+          }
+          onInput={() => autoResize(emptyDescRef)}
+          placeholder="No description yet."
+          rows={2}
+        />
         <Link
           to="/create-itinerary"
           className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-full shadow-md transition"
@@ -199,46 +242,35 @@ const ItineraryPage = () => {
               boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.15)",
             }}
           >
-            {/* Decorative X lines */}
-            <svg
-              className="absolute inset-0 w-full h-full pointer-events-none"
-              style={{ zIndex: 1 }}
-              viewBox="0 0 100 100"
-              preserveAspectRatio="none"
-            >
-              <line
-                x1="0"
-                y1="0"
-                x2="100"
-                y2="100"
-                stroke="#fff"
-                strokeWidth="1.5"
-                strokeOpacity="0.25"
-              />
-              <line
-                x1="100"
-                y1="0"
-                x2="0"
-                y2="100"
-                stroke="#fff"
-                strokeWidth="1.5"
-                strokeOpacity="0.25"
-              />
-            </svg>
-
-            {/* Overlay for darkening the image */}
-            <div className="absolute inset-0 bg-black/30 z-10" />
-
             {/* Centered info card */}
             <div className="relative z-20 flex justify-center w-full">
               <div className="bg-white/95 backdrop-blur-md rounded-xl shadow-lg p-6 sm:p-8 w-full max-w-2xl mx-4 my-12 flex flex-col gap-2 border border-gray-100">
-                <h1 className="text-3xl sm:text-4xl font-semibold text-gray-800 mb-2 text-center">
-                  {itinerary.trip_title ||
-                    `Your Amazing Trip to ${itinerary.destination}`}
-                </h1>
-                <p className="text-gray-700 mb-3 text-center">
-                  {itinerary.description || "No description yet."}
-                </p>
+                <input
+                  type="text"
+                  className="text-3xl sm:text-4xl font-semibold text-gray-800 mb-2 text-center bg-transparent border-b border-gray-300 focus:outline-none focus:border-blue-400 w-full"
+                  value={itinerary.trip_title || ""}
+                  onChange={(e) =>
+                    setItinerary((prev) => ({
+                      ...prev,
+                      trip_title: e.target.value,
+                    }))
+                  }
+                  placeholder={`Your Amazing Trip to ${itinerary.destination}`}
+                />
+                <textarea
+                  ref={mainDescRef}
+                  className="text-gray-700 mb-3 text-center bg-transparent border-b border-gray-200 focus:outline-none focus:border-blue-400 w-full"
+                  value={itinerary.description || ""}
+                  onChange={(e) =>
+                    setItinerary((prev) => ({
+                      ...prev,
+                      description: e.target.value,
+                    }))
+                  }
+                  onInput={() => autoResize(mainDescRef)}
+                  placeholder="No description yet."
+                  rows={2}
+                />
                 <div className="flex flex-row items-center justify-between border-t pt-4 gap-4 text-sm text-gray-700">
                   <div className="flex items-center">
                     <FaCalendarAlt className="mr-2 text-gray-500" />

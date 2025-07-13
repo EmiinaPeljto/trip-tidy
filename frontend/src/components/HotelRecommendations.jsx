@@ -2,6 +2,15 @@ import React from "react";
 import HotelCard from "./HotelCard";
 import HorizontalScrollContainer from "./HorizontalScrollContainer";
 
+const normalizeHotel = (hotel) => ({
+  title: hotel.title || hotel.name || "Hotel Name",
+  imageUrl: hotel.imageUrl || hotel.image || "",
+  location: hotel.location || hotel.address || "",
+  rating: hotel.rating || hotel.review || "N/A",
+  details_url: hotel.details_url || hotel.bookingLink || "#",
+  price: hotel.price || "Price not available",
+});
+
 const HotelRecommendations = ({ hotels }) => {
   if (!hotels || hotels.length === 0) {
     return (
@@ -28,7 +37,7 @@ const HotelRecommendations = ({ hotels }) => {
         title={`${hotels.length} hotels found based on your interests`}
       >
         {hotels.map((hotel, index) => (
-          <HotelCard key={index} hotel={hotel} />
+          <HotelCard key={index} hotel={normalizeHotel(hotel)} />
         ))}
       </HorizontalScrollContainer>
     </div>

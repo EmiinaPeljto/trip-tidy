@@ -5,14 +5,15 @@ const authenticateToken = require("../../../../middleware/auth");
 
 router.post(
   "/createItinerary",
-  authenticateToken,
   itineraryController.createItinerary
 );
-router.get("/getItineraryById/:id", itineraryController.getItineraryById);
+router.get("/getItineraryById/:id", authenticateToken, itineraryController.getItineraryById);
+router.get("/stock", itineraryController.getAllStockItineraries);
 router.post(
   "/saveOrUpdateUserItinerary",
   authenticateToken,
   itineraryController.saveOrUpdateUserItinerary
 );
+router.get("/user/:user_id",authenticateToken, itineraryController.getUserItineraries);
 
 module.exports = router;

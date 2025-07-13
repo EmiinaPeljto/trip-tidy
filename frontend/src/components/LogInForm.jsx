@@ -11,6 +11,14 @@ const LogInForm = () => {
   });
   const navigate = useNavigate();
 
+  const redirectPath = localStorage.getItem("redirectAfterLogin");
+  if (redirectPath) {
+    localStorage.removeItem("redirectAfterLogin");
+    navigate(redirectPath);
+  } else {
+    navigate("/");
+  }
+
   const handleChange = (e) => {
     setFormData({
       ...formData,

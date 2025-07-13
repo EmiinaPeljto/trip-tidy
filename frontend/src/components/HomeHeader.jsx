@@ -23,7 +23,7 @@ const HomeHeader = () => (
         enter your destination, and we’ll handle the rest. ✈️
       </p>
       <Link
-        to="/planner"
+        to="/create-itinerary"
         className="bg-[#5AB1F5] hover:bg-[#4098db] text-white font-bold py-3 px-6 rounded-full shadow-md transition duration-300 ease-in-out transform hover:scale-105"
       >
         Build Your Itinerary

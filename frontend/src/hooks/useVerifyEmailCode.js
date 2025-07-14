@@ -1,8 +1,7 @@
 import { useState } from "react";
 import axiosInstance from "../api/axiosInstance";
 
-const API_URL =
-  "/email_verification/verify-email";
+const API_URL = "/email_verification/verify-email";
 
 const useVerifyEmailCode = () => {
   const [loading, setLoading] = useState(false);
@@ -14,7 +13,7 @@ const useVerifyEmailCode = () => {
     setError("");
     setSuccess(false);
     try {
-      const response = await axios.post(API_URL, { email, code });
+      const response = await axiosInstance.post(API_URL, { email, code });
       setSuccess(true);
       return response.data;
     } catch (err) {

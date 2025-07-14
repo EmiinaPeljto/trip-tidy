@@ -11,14 +11,6 @@ const LogInForm = () => {
   });
   const navigate = useNavigate();
 
-  const redirectPath = localStorage.getItem("redirectAfterLogin");
-  if (redirectPath) {
-    localStorage.removeItem("redirectAfterLogin");
-    navigate(redirectPath);
-  } else {
-    navigate("/");
-  }
-
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -33,10 +25,17 @@ const LogInForm = () => {
       email: formData.usernameOrEmail,
       password_hash: formData.password,
     });
-    if (result) {
+    if (result && result.token) {
       successToast("Login successful!");
-      localStorage.setItem("token", response.data.token);
-      localStorage.setItem("user", JSON.stringify(response.data.user));
+      localStorage.setItem("token", result.token);
+      localStorage.setItem("user", JSON.stringify(result.user));
+      const redirectPath = localStorage.getItem("redirectAfterLogin");
+      if (redirectPath) {
+        localStorage.removeItem("redirectAfterLogin");
+        navigate(redirectPath);
+      } else {
+        navigate("/");
+      }
     }
   };
 

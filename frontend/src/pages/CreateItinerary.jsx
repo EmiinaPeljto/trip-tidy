@@ -5,6 +5,7 @@ import ItineraryFirstStepForm from "../components/ItineraryFirstStepForm";
 import ItinerarySecondStepForm from "../components/ItinerarySecondStepForm";
 import ItineraryThirdStepForm from "../components/ItineraryThirdStepForm";
 import useCreateItinerary from "../hooks/useCreateItinerary";
+import logo from "../assets/logo.png";
 
 const initialFormData = {
   origin: "",
@@ -101,9 +102,46 @@ const CreateItinerary = () => {
   };
 
   if (loading) {
-    return <div className="text-center p-10">Generating your itinerary...</div>;
+    return (
+      <div className="fixed inset-0 flex flex-col items-center justify-center bg-white z-50">
+        {/* Logo */}
+        <img
+          src= {logo}
+          alt="TripTidy Logo"
+          className="w-24 h-24 mb-8"
+          style={{ objectFit: "contain" }}
+        />
+        <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+          Generating your itinerary...
+        </h2>
+        <p className="text-gray-500 text-lg text-center max-w-md">
+          Please wait a few seconds while we craft your personalized trip plan.
+        </p>
+        <div className="mt-8">
+          <svg
+            className="animate-spin h-8 w-8 text-[#5AB1F5]"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+            ></circle>
+            <path
+              className="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8v8z"
+            ></path>
+          </svg>
+        </div>
+      </div>
+    );
   }
-
   if (error) {
     return (
       <div className="text-center p-10">

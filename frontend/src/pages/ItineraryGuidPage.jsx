@@ -182,15 +182,6 @@ const ItineraryGuidPage = () => {
                 {itinerary.description || "No description yet."}
               </p>
               <div className="flex flex-row items-center justify-between border-t pt-4 gap-4 text-sm text-gray-700">
-                <div className="flex items-center">
-                  <FaCalendarAlt className="mr-2 text-gray-500" />
-                  <span>
-                    {`${format(startDate, "MMM d, yyyy")} - ${format(
-                      endDate,
-                      "MMM d, yyyy"
-                    )}`}
-                  </span>
-                </div>
                 <div className="font-medium flex items-center">
                   <span className="mr-1">Days:</span>
                   <span>{numDays}</span>

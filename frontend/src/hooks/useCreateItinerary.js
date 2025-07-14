@@ -1,6 +1,5 @@
-import { useState } from 'react';
-
-const API_URL = 'http://localhost:3001/api/v1/gen/itinerary/createItinerary';
+import { useState } from "react";
+import axiosInstance from "../api/axiosInstance";
 
 const useCreateItinerary = () => {
   const [data, setData] = useState(null);
@@ -13,30 +12,18 @@ const useCreateItinerary = () => {
     setData(null);
 
     try {
-      const token = localStorage.getItem('jwt_token');
-      if (!token) {
-        throw new Error('Authentication token not found. Please log in.');
+      const res = await axiosInstance.post("/itinerary/createItinerary", payload);
+      if (res.data && res.data.itinerary) {
+        setData(res.data.itinerary);
+      } else {
+        throw new Error(res.data?.message || "Failed to create itinerary. Please try again.");
       }
-
-      const response = await fetch(API_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify(payload),
-      });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.message || 'Failed to create itinerary. Please try again.');
-      }
-
-      setData(result.itinerary);
-
     } catch (err) {
-      setError(err.message);
+      setError(
+        err.response?.data?.message ||
+        err.message ||
+        "Failed to create itinerary. Please try again."
+      );
     } finally {
       setLoading(false);
     }

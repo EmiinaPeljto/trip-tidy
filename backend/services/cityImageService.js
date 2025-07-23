@@ -1,4 +1,4 @@
-const { image_key, x_rapidapi_host } = require("../config/rapidapi");
+const { rapidapi_key, x_rapidapi_host } = require("../config/rapidapi");
 const axios = require("axios");
 
 async function fetchCityImage(city) {
@@ -12,7 +12,7 @@ async function fetchCityImage(city) {
         start: "0"
       },
       headers: {
-        "x-rapidapi-key": image_key,
+        "x-rapidapi-key": rapidapi_key,
         "x-rapidapi-host": x_rapidapi_host,
       },
     });

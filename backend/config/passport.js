@@ -10,7 +10,7 @@ passport.use(
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL:
         process.env.GOOGLE_CALLBACK_URL ||
-        "http://localhost:3000/google/callback",
+        "https://trip-tidy.onrender.com/api/v1/gen/users/google/callback",
       passReqToCallback: true,
       proxy: true, // Trust reverse proxy
     },

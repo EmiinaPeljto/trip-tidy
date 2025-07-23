@@ -52,33 +52,37 @@ const GuidePage = () => {
   return (
     <div className="guide-page">
       {/* Hero Section */}
-      <header className="relative flex flex-col items-center justify-center min-h-[360px] text-center     mt-6 overflow-hidden">
+      <header className="relative flex flex-col items-center justify-center min-h-[320px] text-center mt-6 overflow-hidden px-2 sm:px-4">
         {/* Header Content */}
-        <div className="z-10 max-w-2xl">
-          <h1 className="text-5xl md:text-6xl font-extrabold text-gray-800 mb-4">
+        <div className="z-10 w-full max-w-2xl flex flex-col items-center">
+          <h1 className="text-4xl xs:text-5xl md:text-6xl font-extrabold text-gray-800 mb-4">
             Trip <span className="text-[#5AB1F5]">Guide</span>
           </h1>
-          <p className="text-lg md:text-xl font-medium text-gray-600 mb-8">
+          <p className="text-base xs:text-lg md:text-xl font-medium text-gray-600 mb-4 xs:mb-8">
             Explore top destinations with expertly crafted travel plans powered
             by AI.
           </p>
-          <SearchBar
-            searchTerm={searchTerm}
-            onSearchChange={handleSearchChange}
-          />
+          {/* Responsive SearchBar */}
+          <div className="w-full">
+            <SearchBar
+              searchTerm={searchTerm}
+              onSearchChange={handleSearchChange}
+            />
+          </div>
         </div>
       </header>
 
-      <main className="py-12">
-        <div className="max-w-[1440px] mx-auto px-4 md:px-8">
-          <div className="flex flex-wrap justify-between items-center mb-6 gap-4">
-            <div className="flex gap-2 flex-wrap items-center">
+      <main className="py-8 xs:py-12">
+        <div className="max-w-[1440px] mx-auto px-2 xs:px-4 md:px-8">
+          {/* Responsive Filter Section */}
+          <div className="flex flex-col xs:flex-row flex-wrap xs:justify-between xs:items-center mb-6 gap-2 xs:gap-4">
+            <div className="flex flex-col xs:flex-row gap-2 flex-wrap items-center">
               <TripTypeFilter
                 selectedTripType={selectedTripType}
                 onSelect={setSelectedTripType}
               />
               <button
-                className="text-sm underline text-gray-500"
+                className="text-sm underline text-gray-500 mt-1 xs:mt-0"
                 onClick={handleClearFilters}
               >
                 Clear

@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
-import { FiUser, FiMenu } from "react-icons/fi";
+import { FiUser, FiMenu, FiX } from "react-icons/fi";
 
 const NavBar = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(
     !!localStorage.getItem("jwt_token")
   );
+  const mobileMenuRef = useRef();
 
   useEffect(() => {
     const handleStorage = () => {
@@ -19,6 +21,26 @@ const NavBar = () => {
       window.removeEventListener("storage", handleStorage);
     };
   }, []);
+
+  // Close mobile menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        mobileMenuRef.current &&
+        !mobileMenuRef.current.contains(event.target)
+      ) {
+        setMobileMenuOpen(false);
+      }
+    };
+    if (mobileMenuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [mobileMenuOpen]);
 
   const handleLogout = () => {
     localStorage.removeItem("jwt_token");
@@ -31,8 +53,8 @@ const NavBar = () => {
   return (
     <nav className="bg-white shadow-sm fixed w-full z-10 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          {/* Left: Logo */}
+        <div className="flex justify-between h-16 items-center">
+          {/* Logo */}
           <div className="flex items-center">
             <Link to="/" className="flex-shrink-0 flex items-center">
               <img className="h-8 w-auto" src={logo} alt="TripTidy Logo" />
@@ -41,7 +63,8 @@ const NavBar = () => {
               </span>
             </Link>
           </div>
-          {/* Center: Navigation Links (hidden on mobile) */}
+
+          {/* Desktop Nav Links */}
           <div className="hidden md:flex md:space-x-8 items-center mx-auto">
             <Link
               to="/"
@@ -62,11 +85,13 @@ const NavBar = () => {
               Guides
             </Link>
           </div>
-          <div className="flex items-center relative">
+
+          {/* Desktop User Menu */}
+          <div className="hidden md:flex items-center relative">
             {!isLoggedIn ? (
               <Link
                 to="/signup"
-                className="hidden md:inline-flex bg-[#5AB1F5] px-4 py-2 rounded-full text-white text-sm font-semibold hover:bg-[#4098db] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#5AB1F5] transition"
+                className="bg-[#5AB1F5] px-4 py-2 rounded-full text-white text-sm font-semibold hover:bg-[#4098db] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#5AB1F5] transition"
               >
                 Sign Up
               </Link>
@@ -78,37 +103,10 @@ const NavBar = () => {
                   style={{ height: "40px", width: "40px" }}
                   aria-label="User menu"
                 >
-                  <span className="hidden md:inline-flex">
-                    <FiUser className="text-[1.3rem] text-gray-700" />
-                  </span>
-                  <FiMenu className="text-[1rem] text-gray-700 md:hidden" />
+                  <FiUser className="text-[1.3rem] text-gray-700" />
                 </button>
                 {dropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg border border-gray-200 py-2  animate-fade-in0">
-                    <div className="block md:hidden">
-                      <Link
-                        to="/"
-                        className="block px-4 py-2 text-gray-800 hover:bg-[#e3f0fc] hover:text-[#5AB1F5] font-medium transition"
-                        onClick={() => setDropdownOpen(false)}
-                      >
-                        Home
-                      </Link>
-                      <Link
-                        to="/create-itinerary"
-                        className="block px-4 py-2 text-gray-800 hover:bg-[#e3f0fc] hover:text-[#5AB1F5] font-medium transition"
-                        onClick={() => setDropdownOpen(false)}
-                      >
-                        Planner
-                      </Link>
-                      <Link
-                        to="/guide"
-                        className="block px-4 py-2 text-gray-800 hover:bg-[#e3f0fc] hover:text-[#5AB1F5] font-medium transition"
-                        onClick={() => setDropdownOpen(false)}
-                      >
-                        Guide
-                      </Link>
-                      <hr className="my-2 border-gray-200" />
-                    </div>
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg border border-gray-200 py-2 animate-fade-in">
                     <Link
                       to="/profile"
                       className="block px-4 py-2 text-gray-800 hover:bg-[#e3f0fc] hover:text-[#5AB1F5] font-medium transition"
@@ -127,8 +125,81 @@ const NavBar = () => {
               </div>
             )}
           </div>
+
+          {/* Mobile Hamburger */}
+          <div className="md:hidden flex items-center">
+            <button
+              onClick={() => setMobileMenuOpen((open) => !open)}
+              className="text-gray-700 focus:outline-none"
+              aria-label="Open menu"
+            >
+              {mobileMenuOpen ? <FiX size={28} /> : <FiMenu size={28} />}
+            </button>
+          </div>
         </div>
       </div>
+
+      {/* Mobile Dropdown Menu */}
+      {mobileMenuOpen && (
+        <div
+          ref={mobileMenuRef}
+          className="md:hidden absolute top-16 left-0 w-full bg-white shadow-lg z-20 animate-fade-in"
+        >
+          <div className="flex flex-col px-4 py-4 space-y-2">
+            <Link
+              to="/"
+              className="text-gray-700 px-3 py-2 rounded hover:bg-[#e3f0fc] hover:text-[#5AB1F5] font-medium transition"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Home
+            </Link>
+            <Link
+              to="/create-itinerary"
+              className="text-gray-700 px-3 py-2 rounded hover:bg-[#e3f0fc] hover:text-[#5AB1F5] font-medium transition"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Planner
+            </Link>
+            <Link
+              to="/guide"
+              className="text-gray-700 px-3 py-2 rounded hover:bg-[#e3f0fc] hover:text-[#5AB1F5] font-medium transition"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Guides
+            </Link>
+            <hr className="my-2 border-gray-200" />
+            {!isLoggedIn ? (
+              <Link
+                to="/signup"
+                className="text-gray-700 px-3 py-2 rounded hover:bg-[#e3f0fc] hover:text-[#5AB1F5] font-medium transition"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Sign Up
+              </Link>
+            ) : (
+              <>
+                <Link
+                  to="/profile"
+                  className="text-gray-700 px-3 py-2 rounded hover:bg-[#e3f0fc] hover:text-[#5AB1F5] font-medium transition"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  My Profile
+                </Link>
+                <button
+                  onClick={() => {
+                    handleLogout();
+                    setMobileMenuOpen(false);
+                  }}
+                  className="text-gray-700 px-3 py-2 rounded hover:bg-[#e3f0fc] hover:text-[#5AB1F5] font-medium transition text-left"
+                >
+                  Log out
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
       <style>
         {`
           .animate-fade-in {

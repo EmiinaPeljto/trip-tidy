@@ -83,80 +83,71 @@ exports.getItineraryById = async (req, res) => {
 
 const mockFlights = [
   {
-    airline: "VY",
-    details_url:
-      "https://www.google.com/flights?hl=en#flt=LGW.ORY.2025-07-27*ORY.LGW.2025-07-30",
-    outbound: [
-      {
-        airline: "VY",
-        arrival_airport: "ORY",
-        arrival_time: "2025-07-27T10:10:00",
-        departure_airport: "LGW",
-        departure_time: "2025-07-27T07:40:00",
-        flightNumber: "8943",
-      },
-    ],
+    currency: "EUR",
+    duration: ["PT1H30M", "PT1H10M"],
     price: "155.00",
-    return: [
+    segments: [
       {
         airline: "VY",
-        arrival_airport: "LGW",
-        arrival_time: "2025-07-30T07:00:00",
-        departure_airport: "ORY",
-        departure_time: "2025-07-30T06:50:00",
-        flightNumber: "8942",
-      },
-    ],
-  },
-  {
-    airline: "VY",
-    details_url:
-      "https://www.google.com/flights?hl=en#flt=LGW.ORY.2025-07-27*ORY.LGW.2025-07-30",
-    outbound: [
-      {
-        airline: "VY",
-        arrival_airport: "ORY",
-        arrival_time: "2025-07-27T22:05:00",
-        departure_airport: "LGW",
-        departure_time: "2025-07-27T19:40:00",
-        flightNumber: "8945",
-      },
-    ],
-    price: "157.00",
-    return: [
-      {
-        airline: "VY",
-        arrival_airport: "LGW",
-        arrival_time: "2025-07-30T07:00:00",
-        departure_airport: "ORY",
-        departure_time: "2025-07-30T06:50:00",
-        flightNumber: "8942",
-      },
-    ],
-  },
-  {
-    airline: "VY",
-    details_url:
-      "https://www.google.com/flights?hl=en#flt=LGW.ORY.2025-07-27*ORY.LHR.2025-07-30",
-    outbound: [
-      {
-        airline: "VY",
-        arrival_airport: "ORY",
-        arrival_time: "2025-07-27T10:10:00",
-        departure_airport: "LGW",
-        departure_time: "2025-07-27T07:40:00",
+        arrival: "2025-07-27T10:10:00",
+        departure: "2025-07-27T07:40:00",
         flightNumber: "8943",
+        from: "LGW",
+        to: "ORY",
       },
-    ],
-    price: "163.00",
-    return: [
       {
         airline: "VY",
-        arrival_airport: "LHR",
-        arrival_time: "2025-07-30T14:15:00",
-        departure_airport: "ORY",
-        departure_time: "2025-07-30T13:40:00",
-        flightNumber: "8960",
+        arrival: "2025-07-30T07:00:00",
+        departure: "2025-07-30T06:50:00",
+        flightNumber: "8942",
+        from: "ORY",
+        to: "LGW",
+      },
+    ],
+  },
+  {
+    currency: "EUR",
+    duration: ["PT1H25M", "PT1H10M"],
+    price: "157.00",
+    segments: [
+      {
+        airline: "VY",
+        arrival: "2025-07-27T22:05:00",
+        departure: "2025-07-27T19:40:00",
+        flightNumber: "8945",
+        from: "LGW",
+        to: "ORY",
+      },
+      {
+        airline: "VY",
+        arrival: "2025-07-30T07:00:00",
+        departure: "2025-07-30T06:50:00",
+        flightNumber: "8942",
+        from: "ORY",
+        to: "LGW",
+      },
+    ],
+  },
+  {
+    currency: "EUR",
+    duration: ["PT1H25M", "PT1H15M"],
+    price: "157.00",
+    segments: [
+      {
+        airline: "IB",
+        arrival: "2025-07-27T22:05:00",
+        departure: "2025-07-27T19:40:00",
+        flightNumber: "5281",
+        from: "LGW",
+        to: "ORY",
+      },
+      {
+        airline: "IB",
+        arrival: "2025-07-30T19:10:00",
+        departure: "2025-07-30T18:55:00",
+        flightNumber: "5280",
+        from: "ORY",
+        to: "LGW",
       },
     ],
   },
@@ -246,7 +237,7 @@ exports.createItinerary = async (req, res) => {
       );
     } catch (error) {
       console.error("Flight search failed, using mock data:", error);
-      transportation_details = mockFlights; 
+      transportation_details = mockFlights;
     }
     const places = await placesService.getPlaces(
       destination,

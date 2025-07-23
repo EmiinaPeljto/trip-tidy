@@ -14,7 +14,7 @@ passport.use(
       passReqToCallback: true,
       proxy: true, // Trust reverse proxy
     },
-    async (accessToken, refreshToken, profile, done) => {
+    async (req, accessToken, refreshToken, profile, done) => {
       try {
         // Try to find user by google_id
         let user = await userModel.getUserByEmail(profile.emails[0].value);

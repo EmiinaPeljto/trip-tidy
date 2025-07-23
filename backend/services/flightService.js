@@ -2,6 +2,21 @@ const amadeus = require("../config/amadeus");
 
 exports.getFlights = async (origin, destination, start_date, end_date, adults) => {
   try {
+    if (process.env.NODE_ENV !== "production") {
+    return [
+      {
+        id: "mock1",
+        origin,
+        destination,
+        start_date,
+        end_date,
+        price: 123,
+        airline: "MockAir",
+        flight_number: "MA123",
+        duration: "2h 30m"
+      }
+    ];
+  }
     const response = await amadeus.shopping.flightOffersSearch.get({
       originLocationCode: origin,
       destinationLocationCode: destination,

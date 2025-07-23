@@ -6,15 +6,16 @@ exports.getFlights = async (req, res) => {
   // Validate required parameters
   if (!origin || !destination || !start_date || !end_date || !adults) {
     return res.status(400).json({
-      error: "Missing required query parameters: origin, destination, start_date, end_date, adults"
+      error:
+        "Missing required query parameters: origin, destination, start_date, end_date, adults",
     });
   }
 
   // Validate that dates are in the future
-  const today = new Date().toISOString().split('T')[0];
+  const today = new Date().toISOString().split("T")[0];
   if (start_date < today || end_date < today) {
     return res.status(400).json({
-      error: "Dates must be in the future"
+      error: "Dates must be in the future",
     });
   }
 
@@ -29,11 +30,33 @@ exports.getFlights = async (req, res) => {
     res.json({ flights });
   } catch (error) {
     console.error("Error searching for flights:", error);
+    // If in development, return mock data
+    if (process.env.NODE_ENV !== "production") {
+      return res.json({
+        flights: [
+          {
+            id: "mock1",
+            origin,
+            destination,
+            start_date,
+            end_date,
+            price: 123,
+            airline: "MockAir",
+            flight_number: "MA123",
+            duration: "2h 30m",
+          },
+        ],
+      });
+    }
     // Optionally, show Amadeus error details if available
     if (error.response?.body) {
       try {
         const amadeusError = JSON.parse(error.response.body);
-        return res.status(400).json({ error: amadeusError.errors?.[0]?.detail || "Amadeus API error" });
+        return res
+          .status(400)
+          .json({
+            error: amadeusError.errors?.[0]?.detail || "Amadeus API error",
+          });
       } catch (e) {}
     }
     res.status(500).json({ error: "Internal server error" });

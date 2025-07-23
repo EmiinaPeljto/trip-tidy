@@ -143,7 +143,7 @@ const NavBar = () => {
       {mobileMenuOpen && (
         <div
           ref={mobileMenuRef}
-          className="md:hidden absolute top-16 left-0 w-full bg-white shadow-lg z-20 animate-fade-in"
+          className="md:hidden absolute top-16 left-0 w-full bg-white shadow-lg z-50 animate-fade-in"
         >
           <div className="flex flex-col px-4 py-4 space-y-2">
             <Link

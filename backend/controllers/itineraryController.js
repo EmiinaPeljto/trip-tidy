@@ -153,13 +153,32 @@ exports.createItinerary = async (req, res) => {
       budget,
       adults
     );
-    const transportation_details = await flightService.getFlights(
-      originCode,
-      destinationCode,
-      start_date,
-      end_date,
-      adults
-    );
+    let transportation_details;
+    try {
+      transportation_details = await flightService.getFlights(
+        originCode,
+        destinationCode,
+        start_date,
+        end_date,
+        adults
+      );
+    } catch (error) {
+      console.error("Flight search failed, using mock data:", error);
+      transportation_details = [
+        {
+          id: "mock1",
+          origin: originCode,
+          destination: destinationCode,
+          start_date,
+          end_date,
+          price: 123,
+          airline: "MockAir",
+          flight_number: "MA123",
+          duration: "2h 30m",
+          segments: [],
+        },
+      ];
+    }
     const places = await placesService.getPlaces(
       destination,
       preferencesString

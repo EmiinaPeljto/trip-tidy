@@ -32,7 +32,7 @@ async function fetchCityImage(city) {
     return null;
   } catch (error) {
     console.error("Error fetching city image:", error);
-    return null;
+    return "https://via.placeholder.com/400x250?text=No+Image";
   }
 }
 

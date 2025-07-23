@@ -75,7 +75,7 @@ describe("Login page", function () {
         )
       )
       .click();
-    await driver.sleep(5000);
+    await driver.sleep(8000);
 
     const errorMessage = await driver.findElement(
       By.xpath("//*[@id='root']/div[2]/div/section/div/div/div/form/p")

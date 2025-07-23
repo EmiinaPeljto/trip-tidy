@@ -114,7 +114,7 @@ const LogInForm = () => {
                 type="button"
                 onClick={() =>
                   (window.location.href =
-                    "http://localhost:3001/api/v1/gen/users/google")
+                    "https://trip-tidy.onrender.com/api/v1/gen/users/google")
                 }
                 className="w-full flex items-center justify-center gap-2 border border-gray-300 rounded-lg px-5 py-2.5 text-sm font-medium text-gray-700 bg-white hover:bg-gray-100 transition mb-2"
               >
